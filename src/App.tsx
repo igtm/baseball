@@ -147,19 +147,18 @@ function App() {
   // Handle canvas resize for mobile
   useEffect(() => {
     const updateCanvasSize = () => {
-      const maxWidth = Math.min(window.innerWidth - 32, 1000)
-      const maxHeight = Math.min(window.innerHeight * 0.6, 550)
-      const aspectRatio = 1000 / 550
+      const isMobile = window.innerWidth < 768
 
-      let width = maxWidth
-      let height = width / aspectRatio
-
-      if (height > maxHeight) {
-        height = maxHeight
-        width = height * aspectRatio
+      if (isMobile) {
+        const maxWidth = window.innerWidth - 32
+        const aspectRatio = 1000 / 550
+        const width = Math.min(maxWidth, 1000)
+        const height = width / aspectRatio
+        setCanvasSize({ width, height })
+      } else {
+        // PC: use full size
+        setCanvasSize({ width: 1000, height: 550 })
       }
-
-      setCanvasSize({ width, height })
     }
 
     updateCanvasSize()
