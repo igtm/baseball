@@ -1293,9 +1293,9 @@ function App() {
           newY = prev.y + prev.vy
           newX = prev.x + prev.vx
         } else if (prev.type === 'stopping') {
-          // Stopping ball - stops at hitting zone, then continues
-          const stopZoneStart = 0.45
-          const stopZoneEnd = 0.55
+          // Stopping ball - stops before hitting zone, then continues
+          const stopZoneStart = 0.25  // Much earlier - before hitting zone
+          const stopZoneEnd = 0.35
           const stopDuration = 20  // frames
 
           if (newProgress >= stopZoneStart && newProgress <= stopZoneEnd && !newIsStopped) {
