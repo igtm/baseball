@@ -57,6 +57,7 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const [canvasSize, setCanvasSize] = useState({ width: 1000, height: 550 })
+  const [isMobile, setIsMobile] = useState(false)
 
   // Generate inning scores that add up to final score
   const generateInningScores = (finalScore: number): number[] => {
@@ -130,6 +131,22 @@ function App() {
     return names[type]
   }
 
+  // Get pitch type abbreviation (for mobile)
+  const getPitchAbbr = (type: PitchType): string => {
+    const abbrs: Record<PitchType, string> = {
+      'straight': 'S',
+      'curve-left': 'CL',
+      'curve-right': 'CR',
+      'fast': 'F',
+      'fastball': 'FB',
+      'slider': 'SL',
+      'sinker': 'SI',
+      'changeup': 'CH',
+      'gyroball': 'GB'
+    }
+    return abbrs[type]
+  }
+
   // Calculate pitch speed in km/h from velocity
   const getPitchSpeed = (vy: number): number => {
     // Convert velocity to km/h (rough approximation)
@@ -147,9 +164,10 @@ function App() {
   // Handle canvas resize for mobile
   useEffect(() => {
     const updateCanvasSize = () => {
-      const isMobile = window.innerWidth < 768
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
 
-      if (isMobile) {
+      if (mobile) {
         const maxWidth = window.innerWidth - 32
         const aspectRatio = 1000 / 550
         const width = Math.min(maxWidth, 1000)
@@ -1416,26 +1434,33 @@ function App() {
 
   const getTournamentInfo = (type: TournamentType, round: number) => {
     const roundNames = ['1回戦', '2回戦', '準々決勝', '準決勝', '決勝']
+    const roundNamesShort = ['1回', '2回', '準々', '準決', '決勝']
 
     if (type === 'koshien') {
       const opponents = ['桜丘高校', '北陵高校', '緑ヶ丘高校', '星陵高校', '王者高校']
       return {
         title: '甲子園トーナメント',
+        titleShort: '甲',
         roundName: roundNames[round - 1],
+        roundNameShort: roundNamesShort[round - 1],
         opponent: opponents[round - 1]
       }
     } else if (type === 'npb') {
       const opponents = ['読売ジャイアンツ', '阪神タイガース', '広島カープ', '中日ドラゴンズ', '横浜ベイスターズ']
       return {
         title: 'NPBトーナメント',
+        titleShort: 'NPB',
         roundName: roundNames[round - 1],
+        roundNameShort: roundNamesShort[round - 1],
         opponent: opponents[round - 1]
       }
     } else {
       const opponents = ['Yankees', 'Red Sox', 'Dodgers', 'Cubs', 'Astros']
       return {
         title: 'NLB Tournament',
+        titleShort: 'NLB',
         roundName: roundNames[round - 1],
+        roundNameShort: roundNamesShort[round - 1],
         opponent: opponents[round - 1]
       }
     }
@@ -1515,13 +1540,55 @@ function App() {
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50"></div>
 
-      {/* Rich Scoreboard */}
-      <div className="w-full max-w-5xl mb-4 md:mb-6 mx-4 bg-gradient-to-b from-gray-800 to-gray-900 border-2 md:border-4 border-gray-600 rounded-lg shadow-2xl overflow-hidden relative z-10">
-        <div className="bg-gradient-to-r from-gray-700 to-gray-800 py-2 md:py-3 px-2 md:px-4 text-center border-b border-gray-600">
-          <h1 className="text-base md:text-2xl font-bold tracking-wide text-white drop-shadow-lg">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).title} - {getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}</h1>
-        </div>
+      {/* Scoreboard */}
+      {isMobile ? (
+        /* Mobile Compact Scoreboard */
+        <div className="w-full mx-2 mb-3 bg-gradient-to-b from-gray-800 to-gray-900 border-2 border-gray-600 rounded-lg shadow-2xl overflow-hidden relative z-10">
+          <div className="p-2 space-y-2">
+            {/* Title and Scores */}
+            <div className="flex items-center justify-between text-sm">
+              <div className="font-bold text-gray-300">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).titleShort}{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundNameShort}</div>
+              <div className="flex items-center gap-3">
+                <div className="text-gray-400">{gameState.cpuScore}</div>
+                <div className="text-yellow-400 font-bold">{gameState.playerScore}</div>
+              </div>
+            </div>
 
-        <div className="p-3 md:p-6">
+            {/* BSO and Pitch Info */}
+            <div className="flex items-center justify-between bg-gray-950 rounded px-2 py-1.5 text-xs">
+              {/* BSO in one line */}
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">B</span>
+                {[0, 1, 2].map(i => (
+                  <div key={i} className={`w-2 h-2 rounded-full ${i < balls ? 'bg-green-500' : 'bg-gray-700'}`} />
+                ))}
+                <span className="text-gray-400 ml-1">S</span>
+                {[0, 1].map(i => (
+                  <div key={i} className={`w-2 h-2 rounded-full ${i < strikes ? 'bg-yellow-500' : 'bg-gray-700'}`} />
+                ))}
+                <span className="text-gray-400 ml-1">O</span>
+                {[0, 1, 2].map(i => (
+                  <div key={i} className={`w-2 h-2 rounded-full ${i < gameState.outs ? 'bg-red-500' : 'bg-gray-700'}`} />
+                ))}
+              </div>
+
+              {/* Pitch Info */}
+              {currentPitchInfo && (
+                <div className="text-yellow-400 font-bold">
+                  {getPitchAbbr(currentPitchInfo.type as PitchType)}:{currentPitchInfo.speed}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* PC Rich Scoreboard */
+        <div className="w-full max-w-5xl mb-6 mx-4 bg-gradient-to-b from-gray-800 to-gray-900 border-4 border-gray-600 rounded-lg shadow-2xl overflow-hidden relative z-10">
+          <div className="bg-gradient-to-r from-gray-700 to-gray-800 py-3 px-4 text-center border-b border-gray-600">
+            <h1 className="text-2xl font-bold tracking-wide text-white drop-shadow-lg">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).title} - {getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}</h1>
+          </div>
+
+          <div className="p-6">
           {/* Scoreboard Table */}
           <div className="bg-gray-950 rounded-lg p-2 md:p-4 border-2 border-gray-700 mb-4 md:mb-6 overflow-x-auto">
             <table className="w-full text-center text-xs md:text-sm">
@@ -1654,7 +1721,8 @@ function App() {
             )}
           </div>
         </div>
-      </div>
+        </div>
+      )}
 
       <div className="relative z-10 w-full flex justify-center">
         <canvas
