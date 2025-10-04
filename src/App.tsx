@@ -56,6 +56,7 @@ interface Pitch {
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
+  const [canvasSize, setCanvasSize] = useState({ width: 1000, height: 550 })
 
   // Generate inning scores that add up to final score
   const generateInningScores = (finalScore: number): number[] => {
@@ -141,6 +142,30 @@ function App() {
     return () => {
       audioContextRef.current?.close()
     }
+  }, [])
+
+  // Handle canvas resize for mobile
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const maxWidth = Math.min(window.innerWidth - 32, 1000)
+      const maxHeight = Math.min(window.innerHeight * 0.6, 550)
+      const aspectRatio = 1000 / 550
+
+      let width = maxWidth
+      let height = width / aspectRatio
+
+      if (height > maxHeight) {
+        height = maxHeight
+        width = height * aspectRatio
+      }
+
+      setCanvasSize({ width, height })
+    }
+
+    updateCanvasSize()
+    window.addEventListener('resize', updateCanvasSize)
+
+    return () => window.removeEventListener('resize', updateCanvasSize)
   }, [])
 
   // Volume ref to avoid recreating callbacks
@@ -1492,15 +1517,15 @@ function App() {
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50"></div>
 
       {/* Rich Scoreboard */}
-      <div className="w-full max-w-5xl mb-6 bg-gradient-to-b from-gray-800 to-gray-900 border-4 border-gray-600 rounded-lg shadow-2xl overflow-hidden relative z-10">
-        <div className="bg-gradient-to-r from-gray-700 to-gray-800 py-3 px-4 text-center border-b border-gray-600">
-          <h1 className="text-2xl font-bold tracking-wide text-white drop-shadow-lg">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).title} - {getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}</h1>
+      <div className="w-full max-w-5xl mb-4 md:mb-6 mx-4 bg-gradient-to-b from-gray-800 to-gray-900 border-2 md:border-4 border-gray-600 rounded-lg shadow-2xl overflow-hidden relative z-10">
+        <div className="bg-gradient-to-r from-gray-700 to-gray-800 py-2 md:py-3 px-2 md:px-4 text-center border-b border-gray-600">
+          <h1 className="text-base md:text-2xl font-bold tracking-wide text-white drop-shadow-lg">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).title} - {getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}</h1>
         </div>
 
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           {/* Scoreboard Table */}
-          <div className="bg-gray-950 rounded-lg p-4 border-2 border-gray-700 mb-6 overflow-x-auto">
-            <table className="w-full text-center text-sm">
+          <div className="bg-gray-950 rounded-lg p-2 md:p-4 border-2 border-gray-700 mb-4 md:mb-6 overflow-x-auto">
+            <table className="w-full text-center text-xs md:text-sm">
               <thead>
                 <tr className="border-b border-gray-700">
                   <th className="py-2 px-2 text-gray-400 font-bold">TEAM</th>
@@ -1632,12 +1657,17 @@ function App() {
         </div>
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 w-full flex justify-center">
         <canvas
           ref={canvasRef}
           width={1000}
           height={550}
-          className="border-4 border-gray-800 bg-green-700 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-lg cursor-pointer"
+          style={{
+            width: `${canvasSize.width}px`,
+            height: `${canvasSize.height}px`,
+            maxWidth: '100%',
+          }}
+          className="border-4 border-gray-800 bg-green-700 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-lg cursor-pointer touch-none"
           onClick={handleCanvasInteraction}
           onTouchStart={(e) => {
             e.preventDefault()
@@ -1646,13 +1676,13 @@ function App() {
         />
 
         {message && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-90 text-white text-4xl font-bold px-8 py-4 rounded-lg border-2 border-gray-700">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-90 text-white text-2xl md:text-4xl font-bold px-4 md:px-8 py-2 md:py-4 rounded-lg border-2 border-gray-700">
             {message}
           </div>
         )}
 
         {showInstructions && !gameState.isGameOver && (
-          <div className="absolute bottom-4 left-4 bg-black bg-opacity-90 p-4 rounded-lg text-sm border border-gray-700">
+          <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 bg-black bg-opacity-90 p-3 md:p-4 rounded-lg text-xs md:text-sm border border-gray-700 max-w-xs">
             <h3 className="font-bold mb-2 text-gray-200">操作方法</h3>
             <p className="text-gray-300">スペースキー or 画面タップ: スイング</p>
             <p className="mt-2 text-xs text-gray-400">9回裏から開始。サヨナラ勝ちで次の試合へ。</p>
@@ -1668,7 +1698,7 @@ function App() {
         )}
 
         {!gameState.isGameOver && (
-          <div className="absolute bottom-4 right-4 bg-black bg-opacity-90 p-4 rounded-lg text-sm border border-gray-700">
+          <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 bg-black bg-opacity-90 p-3 md:p-4 rounded-lg text-xs md:text-sm border border-gray-700">
             <h3 className="font-bold mb-2 text-gray-200">音量設定</h3>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-400">🔇</span>
@@ -1678,7 +1708,7 @@ function App() {
                 max="100"
                 value={volume * 100}
                 onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                className="w-20 md:w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
                 style={{
                   background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
                 }}
