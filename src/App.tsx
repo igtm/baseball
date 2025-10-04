@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball'
+type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping'
 type HitResult = 'H' | '2B' | '3B' | 'HR' | 'OUT' | null
 type Base = boolean[]
 
@@ -48,6 +48,9 @@ interface Pitch {
   startX: number
   startY: number
   progress: number
+  isVisible?: boolean  // 消える魔球用
+  isStopped?: boolean  // 止まる魔球用
+  stopTimer?: number   // 止まる魔球のタイマー
   initialVy: number
   hasBeenJudged: boolean
   id: number
@@ -126,7 +129,11 @@ function App() {
       'slider': 'スライダー',
       'sinker': 'シンカー',
       'changeup': 'チェンジアップ',
-      'gyroball': 'ジャイロボール'
+      'gyroball': 'ジャイロボール',
+      'knuckleball': 'ナックルボール',
+      'cutter': 'カットボール',
+      'vanishing': '消える魔球',
+      'stopping': '止まる魔球'
     }
     return names[type]
   }
@@ -405,13 +412,13 @@ function App() {
           pitchTypes.push('fastball')
         }
       }
-      // NPB tournament - starts with all pitch types from round 1
+      // NPB tournament - adds knuckleball and cutter
       else if (tournamentType === 'npb') {
-        pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball']
+        pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter']
       }
-      // NLB tournament - even harder
+      // NLB tournament - adds magical pitches
       else if (tournamentType === 'nlb') {
-        pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball']
+        pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
       }
 
       const selectedType = pitchTypes[Math.floor(Math.random() * pitchTypes.length)]
@@ -474,6 +481,26 @@ function App() {
           vy = 2 * speedMultiplier
           vx = (targetXOffset / distanceY) * vy
           break
+        case 'knuckleball':
+          // Wobbling ball with left-right oscillation
+          vy = 3.5 * speedMultiplier
+          vx = (targetXOffset / distanceY) * vy
+          break
+        case 'cutter':
+          // Fast pitch with late sharp break
+          vy = 7.5 * speedMultiplier
+          vx = ((1.2 + (Math.random() - 0.5) * 0.3) + (targetXOffset / distanceY) * 6) * speedMultiplier
+          break
+        case 'vanishing':
+          // Disappearing ball
+          vy = 5 * speedMultiplier
+          vx = (targetXOffset / distanceY) * vy
+          break
+        case 'stopping':
+          // Ball that stops
+          vy = 5 * speedMultiplier
+          vx = (targetXOffset / distanceY) * vy
+          break
       }
 
       const pitchId = Date.now()
@@ -502,7 +529,10 @@ function App() {
         progress: 0,
         initialVy: vy,
         hasBeenJudged: false,
-        id: pitchId
+        id: pitchId,
+        isVisible: selectedType === 'vanishing' ? true : undefined,
+        isStopped: selectedType === 'stopping' ? false : undefined,
+        stopTimer: selectedType === 'stopping' ? 0 : undefined
       })
 
       // Set pitch info for display
@@ -1113,7 +1143,7 @@ function App() {
       ctx.restore()
 
       // Draw pitch
-      if (pitch && pitch.active) {
+      if (pitch && pitch.active && (pitch.isVisible === undefined || pitch.isVisible === true)) {
         ctx.fillStyle = '#fff'
         ctx.beginPath()
         ctx.arc(pitch.x, pitch.y, 10, 0, Math.PI * 2)
@@ -1175,6 +1205,11 @@ function App() {
 
         let newX = prev.x
         let newY = prev.y
+        let newVx = prev.vx
+        let newVy = prev.vy
+        let newIsVisible = prev.isVisible
+        let newIsStopped = prev.isStopped
+        let newStopTimer = prev.stopTimer
 
         // Straight balls (straight, fast, fastball) - linear motion with angle
         const isStraightType = prev.type === 'straight' || prev.type === 'fast' || prev.type === 'fastball'
@@ -1198,6 +1233,62 @@ function App() {
 
           newY = prev.y + currentVy
           newX = prev.x + prev.vx  // Gyroball also travels in straight line
+        } else if (prev.type === 'knuckleball') {
+          // Knuckleball - wobbles left and right
+          const wobbleFrequency = 8
+          const wobbleAmplitude = 2.5
+          const wobbleOffset = Math.sin(newProgress * Math.PI * wobbleFrequency) * wobbleAmplitude
+
+          newY = prev.y + prev.vy
+          newX = prev.x + prev.vx + wobbleOffset
+        } else if (prev.type === 'cutter') {
+          // Cutter - fast pitch with late sharp break (like slider but faster)
+          const breakProgress = Math.pow(newProgress, 3)  // Late break
+          const finalBreakDistance = 60
+          const parabolaX = breakProgress * finalBreakDistance * Math.sign(prev.vx)
+
+          newY = prev.startY + (targetY - prev.startY) * newProgress
+          newX = targetX + parabolaX
+        } else if (prev.type === 'vanishing') {
+          // Vanishing ball - disappears before hitting zone, reappears after
+          const hittingZoneStart = 0.4
+          const hittingZoneEnd = 0.7
+
+          if (newProgress >= hittingZoneStart && newProgress <= hittingZoneEnd) {
+            newIsVisible = false
+          } else {
+            newIsVisible = true
+          }
+
+          newY = prev.y + prev.vy
+          newX = prev.x + prev.vx
+        } else if (prev.type === 'stopping') {
+          // Stopping ball - stops at hitting zone, then continues
+          const stopZoneStart = 0.45
+          const stopZoneEnd = 0.55
+          const stopDuration = 20  // frames
+
+          if (newProgress >= stopZoneStart && newProgress <= stopZoneEnd && !newIsStopped) {
+            // Start stopping
+            newIsStopped = true
+            newStopTimer = 0
+            newY = prev.y  // Stay at current position
+            newX = prev.x
+          } else if (newIsStopped && newStopTimer !== undefined && newStopTimer < stopDuration) {
+            // Continue stopping
+            newStopTimer = newStopTimer + 1
+            newY = prev.y  // Stay at current position
+            newX = prev.x
+          } else if (newIsStopped && newStopTimer !== undefined && newStopTimer >= stopDuration) {
+            // Resume motion
+            newIsStopped = false
+            newY = prev.y + prev.vy
+            newX = prev.x + prev.vx
+          } else {
+            // Normal motion
+            newY = prev.y + prev.vy
+            newX = prev.x + prev.vx
+          }
         } else {
           // Breaking balls (curve, slider, sinker) - use curve logic
           const isStrongBreak = Math.abs(prev.vx) > 1.5
@@ -1289,7 +1380,12 @@ function App() {
           ...prev,
           x: newX,
           y: newY,
-          progress: newProgress
+          progress: newProgress,
+          vx: newVx,
+          vy: newVy,
+          isVisible: newIsVisible,
+          isStopped: newIsStopped,
+          stopTimer: newStopTimer
         }
       })
 
