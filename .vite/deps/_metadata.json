@@ -7,19 +7,19 @@
     "react/jsx-dev-runtime": {
       "src": "../../node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "6d114c15",
+      "fileHash": "03241726",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "d549b86d",
+      "fileHash": "742e3b40",
       "needsInterop": true
     },
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "956ad58e",
+      "fileHash": "1f20d47b",
       "needsInterop": true
     }
   },

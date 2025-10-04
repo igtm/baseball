@@ -168,11 +168,10 @@ function App() {
       setIsMobile(mobile)
 
       if (mobile) {
-        // Mobile: Same aspect ratio as original canvas (1000:550), just showing center portion
+        // Mobile: Vertical canvas - taller than wide
         const maxWidth = window.innerWidth - 32
-        const aspectRatio = 1000 / 550  // Keep original aspect ratio
-        const width = Math.min(maxWidth, 550)
-        const height = width / aspectRatio
+        const width = Math.min(maxWidth, 400)  // Max 400px wide
+        const height = width * 1.6  // 1.6:1 aspect ratio (taller)
         setCanvasSize({ width, height })
       } else {
         // PC: use full size
@@ -889,11 +888,14 @@ function App() {
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
-      // Mobile: Adjust viewport to center (crop sides, keep aspect ratio)
+      // Mobile: Adjust viewport for vertical canvas
       if (isMobile) {
         ctx.save()
-        // Center the 550px wide view in the middle of the 1000px field
-        ctx.translate(-225, 0)  // Shift left to show center portion (500±275)
+        // Scale to fit 550px wide field into canvas width, then crop to show center
+        const scale = canvasWidth / 550
+        ctx.scale(scale, scale)
+        // Center horizontally: shift to show middle 550px of the 1000px field
+        ctx.translate(-225, 0)
       }
 
       // Draw grass background
