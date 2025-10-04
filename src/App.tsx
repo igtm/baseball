@@ -1748,8 +1748,8 @@ function App() {
           </div>
         )}
 
-        {showInstructions && !gameState.isGameOver && (
-          <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 bg-black bg-opacity-90 p-3 md:p-4 rounded-lg text-xs md:text-sm border border-gray-700 max-w-xs">
+        {!isMobile && showInstructions && !gameState.isGameOver && (
+          <div className="absolute bottom-4 left-4 bg-black bg-opacity-90 p-4 rounded-lg text-sm border border-gray-700 max-w-xs">
             <h3 className="font-bold mb-2 text-gray-200">操作方法</h3>
             <p className="text-gray-300">スペースキー or 画面タップ: スイング</p>
             <p className="mt-2 text-xs text-gray-400">9回裏から開始。サヨナラ勝ちで次の試合へ。</p>
@@ -1764,8 +1764,8 @@ function App() {
           </div>
         )}
 
-        {!gameState.isGameOver && (
-          <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 bg-black bg-opacity-90 p-3 md:p-4 rounded-lg text-xs md:text-sm border border-gray-700">
+        {!isMobile && !gameState.isGameOver && (
+          <div className="absolute bottom-4 right-4 bg-black bg-opacity-90 p-4 rounded-lg text-sm border border-gray-700">
             <h3 className="font-bold mb-2 text-gray-200">音量設定</h3>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-400">🔇</span>
@@ -1775,7 +1775,7 @@ function App() {
                 max="100"
                 value={volume * 100}
                 onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                className="w-20 md:w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
                 style={{
                   background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
                 }}
@@ -1823,14 +1823,33 @@ function App() {
         )}
       </div>
 
-      <div className="mt-4 text-sm text-gray-500 relative z-10">
-        <button
-          onClick={() => setShowInstructions(!showInstructions)}
-          className="hover:text-gray-300 transition-colors"
-        >
-          {showInstructions ? '操作方法を隠す' : '操作方法を表示'}
-        </button>
-      </div>
+      {/* Mobile: Instructions below canvas */}
+      {isMobile && showInstructions && !gameState.isGameOver && (
+        <div className="mt-3 mx-2 bg-black bg-opacity-90 p-3 rounded-lg text-xs border border-gray-700 relative z-10 max-w-md">
+          <h3 className="font-bold mb-2 text-gray-200">操作方法</h3>
+          <p className="text-gray-300">画面タップ: スイング</p>
+          <p className="mt-2 text-xs text-gray-400">9回裏から開始。サヨナラ勝ちで次の試合へ。</p>
+          <p className="text-xs text-gray-400">同点または負けるとゲームオーバー。</p>
+          <p className="mt-2 text-xs text-gray-400">ゲームオーバー時: タップで再開</p>
+          <button
+            onClick={() => setShowInstructions(false)}
+            className="mt-2 bg-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-600 text-gray-200"
+          >
+            閉じる
+          </button>
+        </div>
+      )}
+
+      {!isMobile && (
+        <div className="mt-4 text-sm text-gray-500 relative z-10">
+          <button
+            onClick={() => setShowInstructions(!showInstructions)}
+            className="hover:text-gray-300 transition-colors"
+          >
+            {showInstructions ? '操作方法を隠す' : '操作方法を表示'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
