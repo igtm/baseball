@@ -168,9 +168,9 @@ function App() {
       setIsMobile(mobile)
 
       if (mobile) {
-        // Mobile: Vertical layout (550x1000 - rotated view focusing on center)
+        // Mobile: Same aspect ratio as original canvas (1000:550), just showing center portion
         const maxWidth = window.innerWidth - 32
-        const aspectRatio = 550 / 800  // Taller aspect ratio for mobile
+        const aspectRatio = 1000 / 550  // Keep original aspect ratio
         const width = Math.min(maxWidth, 550)
         const height = width / aspectRatio
         setCanvasSize({ width, height })
@@ -889,12 +889,11 @@ function App() {
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
-      // Mobile: Adjust viewport to center (crop sides)
+      // Mobile: Adjust viewport to center (crop sides, keep aspect ratio)
       if (isMobile) {
         ctx.save()
         // Center the 550px wide view in the middle of the 1000px field
-        ctx.translate(-225, 0)  // Shift left to show center portion
-        ctx.scale(1, canvasHeight / 550)  // Scale height to fit mobile canvas
+        ctx.translate(-225, 0)  // Shift left to show center portion (500±275)
       }
 
       // Draw grass background
@@ -1744,8 +1743,8 @@ function App() {
       <div className="relative z-10 w-full flex justify-center">
         <canvas
           ref={canvasRef}
-          width={isMobile ? 550 : 1000}
-          height={isMobile ? 800 : 550}
+          width={1000}
+          height={550}
           style={{
             width: `${canvasSize.width}px`,
             height: `${canvasSize.height}px`,
