@@ -554,7 +554,25 @@ function App() {
 
     if (hitZone) {
       console.log('💥 HIT!')
-      const angle = (Math.random() - 0.5) * Math.PI / 3
+
+      // Calculate timing-based angle (左打者)
+      // pitch.y: homeY-100 (early/引張) to homeY+20 (late/流し打ち)
+      const timing = (pitch.y - (homeY - 100)) / 120  // 0 (early) to 1 (late)
+
+      // Angle mapping (左打者):
+      // timing 0.0 (very early) -> +75° (right foul/引張ファウル)
+      // timing 0.2 (early)      -> +45° (right pull/引張)
+      // timing 0.5 (perfect)    -> 0° (center)
+      // timing 0.8 (late)       -> -45° (left opposite field/流し打ち)
+      // timing 1.0 (very late)  -> -75° (left foul/流し打ちファウル)
+
+      // Convert to angle: +75° to -75° (wider range including foul territory)
+      const baseAngle = (0.5 - timing) * Math.PI * 0.833  // 0.833 = 150°/180°
+
+      // Add small random variation
+      const randomVariation = (Math.random() - 0.5) * Math.PI * 0.1
+      const angle = baseAngle + randomVariation
+
       const speed = 8 + Math.random() * 4
       const vx = speed * Math.sin(angle)
       const vy = -speed * Math.cos(angle)
@@ -753,15 +771,15 @@ function App() {
 
     // Define fence zones matching visual display
     const zones = [
-      { minAngle: Math.PI * 0.25, maxAngle: Math.PI * 0.33, result: 'OUT' as HitResult },
-      { minAngle: Math.PI * 0.33, maxAngle: Math.PI * 0.405, result: 'H' as HitResult },
-      { minAngle: Math.PI * 0.405, maxAngle: Math.PI * 0.45, result: '2B' as HitResult },
+      { minAngle: Math.PI * 0.25, maxAngle: Math.PI * 0.34, result: 'OUT' as HitResult },
+      { minAngle: Math.PI * 0.34, maxAngle: Math.PI * 0.40, result: 'H' as HitResult },
+      { minAngle: Math.PI * 0.40, maxAngle: Math.PI * 0.45, result: '2B' as HitResult },
       { minAngle: Math.PI * 0.45, maxAngle: Math.PI * 0.48, result: '3B' as HitResult },
       { minAngle: Math.PI * 0.48, maxAngle: Math.PI * 0.52, result: 'HR' as HitResult },
       { minAngle: Math.PI * 0.52, maxAngle: Math.PI * 0.55, result: '3B' as HitResult },
-      { minAngle: Math.PI * 0.55, maxAngle: Math.PI * 0.595, result: '2B' as HitResult },
-      { minAngle: Math.PI * 0.595, maxAngle: Math.PI * 0.67, result: 'H' as HitResult },
-      { minAngle: Math.PI * 0.67, maxAngle: Math.PI * 0.75, result: 'OUT' as HitResult },
+      { minAngle: Math.PI * 0.55, maxAngle: Math.PI * 0.60, result: '2B' as HitResult },
+      { minAngle: Math.PI * 0.60, maxAngle: Math.PI * 0.66, result: 'H' as HitResult },
+      { minAngle: Math.PI * 0.66, maxAngle: Math.PI * 0.75, result: 'OUT' as HitResult },
     ]
 
     for (const zone of zones) {
@@ -970,15 +988,15 @@ function App() {
       // Draw outfield zones on fence (90 degree span)
       const fenceRadius = 500
       const zones = [
-        { startAngle: Math.PI * 0.25, endAngle: Math.PI * 0.33, label: 'OUT', color: '#ef4444' },
-        { startAngle: Math.PI * 0.33, endAngle: Math.PI * 0.405, label: 'H', color: '#a78bfa' },
-        { startAngle: Math.PI * 0.405, endAngle: Math.PI * 0.45, label: '2B', color: '#34d399' },
+        { startAngle: Math.PI * 0.25, endAngle: Math.PI * 0.34, label: 'OUT', color: '#ef4444' },
+        { startAngle: Math.PI * 0.34, endAngle: Math.PI * 0.40, label: 'H', color: '#a78bfa' },
+        { startAngle: Math.PI * 0.40, endAngle: Math.PI * 0.45, label: '2B', color: '#34d399' },
         { startAngle: Math.PI * 0.45, endAngle: Math.PI * 0.48, label: '3B', color: '#60a5fa' },
         { startAngle: Math.PI * 0.48, endAngle: Math.PI * 0.52, label: 'HR', color: '#fbbf24' },
         { startAngle: Math.PI * 0.52, endAngle: Math.PI * 0.55, label: '3B', color: '#60a5fa' },
-        { startAngle: Math.PI * 0.55, endAngle: Math.PI * 0.595, label: '2B', color: '#34d399' },
-        { startAngle: Math.PI * 0.595, endAngle: Math.PI * 0.67, label: 'H', color: '#a78bfa' },
-        { startAngle: Math.PI * 0.67, endAngle: Math.PI * 0.75, label: 'OUT', color: '#ef4444' },
+        { startAngle: Math.PI * 0.55, endAngle: Math.PI * 0.60, label: '2B', color: '#34d399' },
+        { startAngle: Math.PI * 0.60, endAngle: Math.PI * 0.66, label: 'H', color: '#a78bfa' },
+        { startAngle: Math.PI * 0.66, endAngle: Math.PI * 0.75, label: 'OUT', color: '#ef4444' },
       ]
 
       zones.forEach((zone) => {
@@ -1296,12 +1314,22 @@ function App() {
           return null
         }
 
+        // Foul ball detection (outside fair territory)
         if (angle < Math.PI * 0.25 || angle > Math.PI * 0.75) {
           if (distance > 300) {
             if (!prev.hasScored && lastProcessedBallRef.current !== prev.id) {
               lastProcessedBallRef.current = prev.id
-              const result = checkHitResult(newX, newY)
-              processHitResult(result)
+              // Foul ball: add strike unless already at 2 strikes
+              setMessage('ファウル!')
+              setTimeout(() => setMessage(''), 1500)
+              playSound(300, 0.3)
+
+              setStrikes(s => {
+                if (s < 2) {
+                  return s + 1
+                }
+                return s // 2 strikes: no change
+              })
             }
             return null
           }
