@@ -131,21 +131,6 @@ function App() {
     return names[type]
   }
 
-  // Get pitch type abbreviation (for mobile)
-  const getPitchAbbr = (type: PitchType): string => {
-    const abbrs: Record<PitchType, string> = {
-      'straight': 'S',
-      'curve-left': 'CL',
-      'curve-right': 'CR',
-      'fast': 'F',
-      'fastball': 'FB',
-      'slider': 'SL',
-      'sinker': 'SI',
-      'changeup': 'CH',
-      'gyroball': 'GB'
-    }
-    return abbrs[type]
-  }
 
   // Calculate pitch speed in km/h from velocity
   const getPitchSpeed = (vy: number): number => {
@@ -168,11 +153,11 @@ function App() {
       setIsMobile(mobile)
 
       if (mobile) {
-        // Mobile: Vertical canvas - taller than wide
+        // Mobile: Vertical canvas - 550×880 (cropped from 1000×550 field)
         const maxWidth = window.innerWidth - 32
-        const width = Math.min(maxWidth, 400)  // Max 400px wide
-        const height = width * 1.6  // 1.6:1 aspect ratio (taller)
-        setCanvasSize({ width, height })
+        const displayWidth = Math.min(maxWidth, 400)  // Max 400px wide
+        const displayHeight = displayWidth * 1.6  // 1.6:1 aspect ratio (taller)
+        setCanvasSize({ width: displayWidth, height: displayHeight })
       } else {
         // PC: use full size
         setCanvasSize({ width: 1000, height: 550 })
@@ -888,12 +873,9 @@ function App() {
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
-      // Mobile: Adjust viewport for vertical canvas
+      // Mobile: Crop-only viewport (no scaling, just translate)
       if (isMobile) {
         ctx.save()
-        // Scale to fit 550px wide field into canvas width, then crop to show center
-        const scale = canvasWidth / 550
-        ctx.scale(scale, scale)
         // Center horizontally: shift to show middle 550px of the 1000px field
         ctx.translate(-225, 0)
       }
@@ -911,14 +893,6 @@ function App() {
       ctx.closePath()
       ctx.fill()
 
-      // Draw grass pattern
-      ctx.strokeStyle = '#14532d'
-      ctx.lineWidth = 2
-      for (let i = 100; i < 550; i += 30) {
-        ctx.beginPath()
-        ctx.arc(500, 530, i, Math.PI * 0.75, Math.PI * 0.25, true)
-        ctx.stroke()
-      }
 
       // Draw warning track
       ctx.fillStyle = '#92400e'
@@ -1565,10 +1539,11 @@ function App() {
           <div className="p-2 space-y-2">
             {/* Title and Scores */}
             <div className="flex items-center justify-between text-sm">
-              <div className="font-bold text-gray-300">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).titleShort}{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundNameShort}</div>
-              <div className="flex items-center gap-3">
-                <div className="text-gray-400">{gameState.cpuScore}</div>
-                <div className="text-yellow-400 font-bold">{gameState.playerScore}</div>
+              <div className="font-bold text-gray-300">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).title.replace('トーナメント', '')} - {getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}</div>
+              <div className="flex items-center gap-1">
+                <span className="text-gray-400">{getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).opponent.charAt(0)}{gameState.cpuScore}</span>
+                <span className="text-gray-500">-</span>
+                <span className="text-yellow-400 font-bold">{gameState.playerScore}サ</span>
               </div>
             </div>
 
@@ -1585,7 +1560,7 @@ function App() {
                   <div key={i} className={`w-2 h-2 rounded-full ${i < strikes ? 'bg-yellow-500' : 'bg-gray-700'}`} />
                 ))}
                 <span className="text-gray-400 ml-1">O</span>
-                {[0, 1, 2].map(i => (
+                {[0, 1].map(i => (
                   <div key={i} className={`w-2 h-2 rounded-full ${i < gameState.outs ? 'bg-red-500' : 'bg-gray-700'}`} />
                 ))}
               </div>
@@ -1593,7 +1568,7 @@ function App() {
               {/* Pitch Info */}
               {currentPitchInfo && (
                 <div className="text-yellow-400 font-bold">
-                  {getPitchAbbr(currentPitchInfo.type as PitchType)}:{currentPitchInfo.speed}
+                  {currentPitchInfo.type}:{currentPitchInfo.speed}km/h
                 </div>
               )}
             </div>
@@ -1632,7 +1607,7 @@ function App() {
                   <td className="py-2 px-2 text-gray-400">{gameState.cpuErrors}</td>
                 </tr>
                 <tr>
-                  <td className="py-2 px-2 text-green-400 font-bold">グッバイ高校</td>
+                  <td className="py-2 px-2 text-green-400 font-bold">サヨナラ高校</td>
                   {gameState.playerInningScores.map((score, i) => {
                     if (i === 8) {
                       // 9th inning
@@ -1689,7 +1664,7 @@ function App() {
                 <div className="flex items-center gap-1">
                   <span className="text-xs text-gray-400 font-bold w-3">O</span>
                   <div className="flex gap-1">
-                    {[0, 1, 2].map(i => (
+                    {[0, 1].map(i => (
                       <div
                         key={i}
                         className={`w-3 h-3 rounded-full border ${
@@ -1745,8 +1720,8 @@ function App() {
       <div className="relative z-10 w-full flex justify-center">
         <canvas
           ref={canvasRef}
-          width={1000}
-          height={550}
+          width={isMobile ? 550 : 1000}
+          height={isMobile ? 880 : 550}
           style={{
             width: `${canvasSize.width}px`,
             height: `${canvasSize.height}px`,
