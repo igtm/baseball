@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# ⚾ 野球盤ゲーム - 甲子園トーナメント
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+https://igtm.github.io/baseball/
 
-Currently, two official plugins are available:
+## 🎮 これ、めっちゃ熱いゲームです
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+9回裏、3点ビハインド。サヨナラ勝ちしないと即ゲームオーバー。
 
-## React Compiler
+そんな絶望的な状況から這い上がる快感、味わってみませんか？
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## ✨ ここが面白い！
 
-## Expanding the ESLint configuration
+### 🔥 常に背水の陣
+- **毎試合9回裏から開始**。逆転劇しか許されない緊張感
+- 同点でもダメ。**サヨナラ勝ちのみが正義**
+- ワンミスが命取り。3アウトで即終了
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🎯 シンプルなのに奥深い
+- 操作は**スペースキーorタップのみ**
+- でも球種は9種類。ストレート、カーブ、スライダー、チェンジアップ...
+- タイミングを見極めろ！ジャイロボールの加速、スライダーの鋭い曲がり
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🏆 終わりなき戦い
+- 甲子園5回戦を制覇したら...？
+- **NPBトーナメント**が待ってる
+- さらにその先には**NLBトーナメント**
+- 難易度も球速もどんどん上がる。世界一を目指せ！
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 🎵 臨場感あふれるサウンド
+- ラウンドが進むごとに変わるBGM
+- 決勝戦のマイナーキーは鳥肌モノ
+- 打球音、ストライク音...全部Web Audio APIで生成
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 📱 スマホでも快適プレイ
+- 縦長レイアウトで見やすい
+- コンパクトなスコアボード
+- 通勤中にサヨナラホームラン、打っちゃう？
+
+## 🎪 遊び方
+
+1. **画面タップ or スペースキー**でスイング
+2. タイミングを合わせて打つだけ！
+3. 外野フェンスの色で結果が決まる
+   - 🟡 **HR** : ホームラン！
+   - 🔵 **3B** : スリーベース
+   - 🟢 **2B** : ツーベース
+   - 🟣 **H** : ヒット（内野ゾーン）
+   - 🔴 **OUT** : アウト...
+
+## 🎬 見どころ
+
+- **打った瞬間の弾道**がリアルタイムで描画される
+- **ヒットゾーン判定**が超シビア。フェンス直撃の快感
+- **勝利演出**からの次ラウンド突入がアツい
+- **スイング＆ミス**の絶望感も味わい深い
+
+## 🛠️ 技術スタック
+
+- **React 19** + TypeScript
+- **Vite** で爆速ビルド
+- **Tailwind CSS v4** でスタイリング
+- **Canvas 2D API** でグラフィック描画
+- **Web Audio API** でサウンド生成
+
+## 🎯 こんな人におすすめ
+
+- ✅ 野球が好き
+- ✅ 逆転劇に燃える
+- ✅ シンプルだけど歯ごたえのあるゲームが好き
+- ✅ ちょっとした空き時間に熱くなりたい
+- ✅ サヨナラホームランの快感を味わいたい
+
+## 🚀 今すぐプレイ！
+
+👉 **https://igtm.github.io/baseball/**
+
+プレイボール！⚾✨
+
+---
+
+## 📦 開発者向け
+
+### セットアップ
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### ビルド
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+### デプロイ
+
+```bash
+# gh-pagesブランチにデプロイ
+git checkout gh-pages
+npm run build
+cp dist/index.html .
+cp -r dist/assets .
+git add -A
+git commit -m "Deploy updates"
+git push origin gh-pages
+```
+
+---
+
+© 2025 野球盤ゲーム | Made with ❤️ and Claude Code
