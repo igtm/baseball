@@ -616,8 +616,8 @@ function App() {
 
       return {
         ...prev,
-        outs: newOuts,
-        bases: [false, false, false]
+        outs: newOuts
+        // ランナーはそのまま維持
       }
     })
 
@@ -753,19 +753,16 @@ function App() {
 
     // Define fence zones matching visual display
     const zones = [
-      { minAngle: Math.PI * 0.30, maxAngle: Math.PI * 0.38, result: 'OUT' as HitResult },
-      { minAngle: Math.PI * 0.38, maxAngle: Math.PI * 0.44, result: '2B' as HitResult },
-      { minAngle: Math.PI * 0.44, maxAngle: Math.PI * 0.48, result: '3B' as HitResult },
+      { minAngle: Math.PI * 0.25, maxAngle: Math.PI * 0.33, result: 'OUT' as HitResult },
+      { minAngle: Math.PI * 0.33, maxAngle: Math.PI * 0.405, result: 'H' as HitResult },
+      { minAngle: Math.PI * 0.405, maxAngle: Math.PI * 0.45, result: '2B' as HitResult },
+      { minAngle: Math.PI * 0.45, maxAngle: Math.PI * 0.48, result: '3B' as HitResult },
       { minAngle: Math.PI * 0.48, maxAngle: Math.PI * 0.52, result: 'HR' as HitResult },
-      { minAngle: Math.PI * 0.52, maxAngle: Math.PI * 0.56, result: '3B' as HitResult },
-      { minAngle: Math.PI * 0.56, maxAngle: Math.PI * 0.62, result: '2B' as HitResult },
-      { minAngle: Math.PI * 0.62, maxAngle: Math.PI * 0.70, result: 'OUT' as HitResult },
+      { minAngle: Math.PI * 0.52, maxAngle: Math.PI * 0.55, result: '3B' as HitResult },
+      { minAngle: Math.PI * 0.55, maxAngle: Math.PI * 0.595, result: '2B' as HitResult },
+      { minAngle: Math.PI * 0.595, maxAngle: Math.PI * 0.67, result: 'H' as HitResult },
+      { minAngle: Math.PI * 0.67, maxAngle: Math.PI * 0.75, result: 'OUT' as HitResult },
     ]
-
-    // Check H zone first (inner zone)
-    if (angle >= Math.PI * 0.40 && angle <= Math.PI * 0.60 && distance < 480) {
-      return 'H'
-    }
 
     for (const zone of zones) {
       if (angle >= zone.minAngle && angle <= zone.maxAngle) {
@@ -819,7 +816,7 @@ function App() {
           break
         case 'OUT':
           newOuts++
-          newBases = [false, false, false]
+          // ランナーはそのまま維持
           setMessage('アウト!')
           playSound(200, 0.3)
           break
@@ -973,19 +970,18 @@ function App() {
       // Draw outfield zones on fence (90 degree span)
       const fenceRadius = 500
       const zones = [
-        { startAngle: Math.PI * 0.30, endAngle: Math.PI * 0.38, label: 'OUT', color: '#ef4444' },
-        { startAngle: Math.PI * 0.38, endAngle: Math.PI * 0.44, label: '2B', color: '#34d399' },
-        { startAngle: Math.PI * 0.44, endAngle: Math.PI * 0.48, label: '3B', color: '#60a5fa' },
+        { startAngle: Math.PI * 0.25, endAngle: Math.PI * 0.33, label: 'OUT', color: '#ef4444' },
+        { startAngle: Math.PI * 0.33, endAngle: Math.PI * 0.405, label: 'H', color: '#a78bfa' },
+        { startAngle: Math.PI * 0.405, endAngle: Math.PI * 0.45, label: '2B', color: '#34d399' },
+        { startAngle: Math.PI * 0.45, endAngle: Math.PI * 0.48, label: '3B', color: '#60a5fa' },
         { startAngle: Math.PI * 0.48, endAngle: Math.PI * 0.52, label: 'HR', color: '#fbbf24' },
-        { startAngle: Math.PI * 0.52, endAngle: Math.PI * 0.56, label: '3B', color: '#60a5fa' },
-        { startAngle: Math.PI * 0.56, endAngle: Math.PI * 0.62, label: '2B', color: '#34d399' },
-        { startAngle: Math.PI * 0.62, endAngle: Math.PI * 0.70, label: 'OUT', color: '#ef4444' },
-        { startAngle: Math.PI * 0.40, endAngle: Math.PI * 0.60, label: 'H', color: '#a78bfa' },
+        { startAngle: Math.PI * 0.52, endAngle: Math.PI * 0.55, label: '3B', color: '#60a5fa' },
+        { startAngle: Math.PI * 0.55, endAngle: Math.PI * 0.595, label: '2B', color: '#34d399' },
+        { startAngle: Math.PI * 0.595, endAngle: Math.PI * 0.67, label: 'H', color: '#a78bfa' },
+        { startAngle: Math.PI * 0.67, endAngle: Math.PI * 0.75, label: 'OUT', color: '#ef4444' },
       ]
 
-      zones.forEach((zone, idx) => {
-        // Skip H zone for first pass (draw it last to be on top)
-        if (idx === zones.length - 1) return
+      zones.forEach((zone) => {
 
         // Draw colored section on fence
         ctx.fillStyle = zone.color
@@ -1025,47 +1021,6 @@ function App() {
         ctx.fillText(zone.label, 0, 0)
         ctx.restore()
       })
-
-      // Draw H zone (center, overlapping)
-      const hZone = zones[zones.length - 1]
-      ctx.fillStyle = hZone.color
-      ctx.beginPath()
-      ctx.arc(500, 530, fenceRadius - 35, hZone.startAngle, hZone.endAngle)
-      ctx.arc(500, 530, fenceRadius - 60, hZone.endAngle, hZone.startAngle, true)
-      ctx.closePath()
-      ctx.fill()
-
-      // Draw H zone borders
-      ctx.strokeStyle = '#000'
-      ctx.lineWidth = 3
-      ctx.beginPath()
-      ctx.moveTo(500 + Math.cos(hZone.startAngle) * (fenceRadius - 60), 530 - Math.sin(hZone.startAngle) * (fenceRadius - 60))
-      ctx.lineTo(500 + Math.cos(hZone.startAngle) * (fenceRadius - 35), 530 - Math.sin(hZone.startAngle) * (fenceRadius - 35))
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.moveTo(500 + Math.cos(hZone.endAngle) * (fenceRadius - 60), 530 - Math.sin(hZone.endAngle) * (fenceRadius - 60))
-      ctx.lineTo(500 + Math.cos(hZone.endAngle) * (fenceRadius - 35), 530 - Math.sin(hZone.endAngle) * (fenceRadius - 35))
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.arc(500, 530, fenceRadius - 60, hZone.startAngle, hZone.endAngle)
-      ctx.stroke()
-
-      const hLabelAngle = (hZone.startAngle + hZone.endAngle) / 2
-      const hLabelX = 500 + Math.cos(hLabelAngle) * (fenceRadius - 47)
-      const hLabelY = 530 - Math.sin(hLabelAngle) * (fenceRadius - 47)
-
-      ctx.save()
-      ctx.translate(hLabelX, hLabelY)
-      ctx.rotate(-hLabelAngle + Math.PI / 2)
-      ctx.fillStyle = '#fff'
-      ctx.strokeStyle = '#000'
-      ctx.lineWidth = 3
-      ctx.font = 'bold 18px Arial'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.strokeText('H', 0, 0)
-      ctx.fillText('H', 0, 0)
-      ctx.restore()
 
       // Draw bases (squares)
       const basePositions = [
@@ -1302,6 +1257,7 @@ function App() {
                     bases: newBases
                   }
                 })
+                setStrikes(0)  // ストライクもリセット
                 return 0
               }
               return newBalls
@@ -1473,10 +1429,10 @@ function App() {
 
         {/* Start Screen */}
         <div className="relative z-10 w-full max-w-2xl mx-auto text-center px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
-            甲子園トーナメント
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+            【9回裏】0点からの逆転劇が奇跡すぎたwww
           </h1>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-300">野球盤ゲーム</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-300">野球盤ゲーム</h2>
 
           <div className="bg-gray-900 bg-opacity-90 border-2 sm:border-4 border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 mb-6 md:mb-8">
             <h3 className="text-lg sm:text-xl font-bold mb-3 md:mb-4 text-yellow-400">ゲームルール</h3>
@@ -1514,7 +1470,7 @@ function App() {
           </div>
 
           <div className="text-xs sm:text-sm text-gray-500">
-            <p>© 2025 野球盤ゲーム</p>
+            <p>© 2025 【9回裏】0点からの逆転劇が奇跡すぎたwww</p>
           </div>
         </div>
       </div>
