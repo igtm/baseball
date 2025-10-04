@@ -168,9 +168,10 @@ function App() {
       setIsMobile(mobile)
 
       if (mobile) {
+        // Mobile: Vertical layout (550x1000 - rotated view focusing on center)
         const maxWidth = window.innerWidth - 32
-        const aspectRatio = 1000 / 550
-        const width = Math.min(maxWidth, 1000)
+        const aspectRatio = 550 / 800  // Taller aspect ratio for mobile
+        const width = Math.min(maxWidth, 550)
         const height = width / aspectRatio
         setCanvasSize({ width, height })
       } else {
@@ -883,7 +884,18 @@ function App() {
     if (!ctx) return
 
     const animate = () => {
-      ctx.clearRect(0, 0, 1000, 550)
+      const canvasWidth = canvas.width
+      const canvasHeight = canvas.height
+
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+
+      // Mobile: Adjust viewport to center (crop sides)
+      if (isMobile) {
+        ctx.save()
+        // Center the 550px wide view in the middle of the 1000px field
+        ctx.translate(-225, 0)  // Shift left to show center portion
+        ctx.scale(1, canvasHeight / 550)  // Scale height to fit mobile canvas
+      }
 
       // Draw grass background
       ctx.fillStyle = '#15803d'
@@ -1174,6 +1186,11 @@ function App() {
         ctx.stroke()
       }
 
+      // Restore canvas state for mobile
+      if (isMobile) {
+        ctx.restore()
+      }
+
       animationFrameRef.current = requestAnimationFrame(animate)
     }
 
@@ -1182,7 +1199,7 @@ function App() {
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
     }
-  }, [pitch, ball, gameState.bases, swingAngle, gameStarted])
+  }, [pitch, ball, gameState.bases, swingAngle, gameStarted, isMobile])
 
   // Game loop - simple setInterval approach
   useEffect(() => {
@@ -1480,48 +1497,48 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50"></div>
 
         {/* Start Screen */}
-        <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <h1 className="text-6xl font-bold mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+        <div className="relative z-10 w-full max-w-2xl mx-auto text-center px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
             甲子園トーナメント
           </h1>
-          <h2 className="text-3xl font-bold mb-8 text-gray-300">野球盤ゲーム</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-300">野球盤ゲーム</h2>
 
-          <div className="bg-gray-900 bg-opacity-90 border-4 border-gray-700 rounded-lg p-8 mb-8">
-            <h3 className="text-xl font-bold mb-4 text-yellow-400">ゲームルール</h3>
-            <div className="text-left text-gray-300 space-y-2 mb-6">
+          <div className="bg-gray-900 bg-opacity-90 border-2 sm:border-4 border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 mb-6 md:mb-8">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 md:mb-4 text-yellow-400">ゲームルール</h3>
+            <div className="text-left text-sm sm:text-base text-gray-300 space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
               <p>• 9回裏、3点差を追いかける逆転劇</p>
               <p>• サヨナラ勝ちで次の回戦へ進出</p>
               <p>• 5つの回戦を勝ち抜いて優勝を目指せ！</p>
               <p>• スペースキーまたは画面タップでスイング</p>
             </div>
 
-            <h3 className="text-xl font-bold mb-4 text-yellow-400">音量設定</h3>
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <span className="text-sm text-gray-400">🔇</span>
+            <h3 className="text-lg sm:text-xl font-bold mb-3 md:mb-4 text-yellow-400">音量設定</h3>
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 md:mb-8">
+              <span className="text-xs sm:text-sm text-gray-400">🔇</span>
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={volume * 100}
                 onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                className="w-64 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                className="w-32 sm:w-48 md:w-64 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
                 style={{
                   background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
                 }}
               />
-              <span className="text-sm text-gray-400">🔊</span>
-              <span className="text-sm text-gray-300 w-12">{Math.round(volume * 100)}%</span>
+              <span className="text-xs sm:text-sm text-gray-400">🔊</span>
+              <span className="text-xs sm:text-sm text-gray-300 w-8 sm:w-12">{Math.round(volume * 100)}%</span>
             </div>
 
             <button
               onClick={() => setGameStarted(true)}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white text-3xl font-bold py-6 px-16 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.5)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7)] transition-all duration-300 transform hover:scale-105"
+              className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white text-xl sm:text-2xl md:text-3xl font-bold py-4 sm:py-5 md:py-6 px-8 sm:px-12 md:px-16 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.5)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7)] transition-all duration-300 transform hover:scale-105"
             >
               プレイボール！
             </button>
           </div>
 
-          <div className="text-sm text-gray-500">
+          <div className="text-xs sm:text-sm text-gray-500">
             <p>© 2025 野球盤ゲーム</p>
           </div>
         </div>
@@ -1727,8 +1744,8 @@ function App() {
       <div className="relative z-10 w-full flex justify-center">
         <canvas
           ref={canvasRef}
-          width={1000}
-          height={550}
+          width={isMobile ? 550 : 1000}
+          height={isMobile ? 800 : 550}
           style={{
             width: `${canvasSize.width}px`,
             height: `${canvasSize.height}px`,
