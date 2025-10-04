@@ -1642,21 +1642,27 @@ function App() {
               プレイボール！
             </button>
 
+            {/* Period-limited tournament selection buttons (always visible) */}
+            <div className="mt-6 space-y-3">
+              <div className="text-sm text-yellow-400 font-bold mb-2">⚡ 期間限定！好きなトーナメントから開始</div>
+              <button
+                onClick={() => startGameWithTournament('npb')}
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.7)] transition-all duration-300 transform hover:scale-105"
+              >
+                NPBトーナメントから開始
+              </button>
+              <button
+                onClick={() => startGameWithTournament('nlb')}
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
+              >
+                NLBトーナメントから開始
+              </button>
+            </div>
+
+            {/* Debug mode indicator (hidden feature) */}
             {debugMode && (
-              <div className="mt-6 space-y-3">
-                <div className="text-sm text-red-400 font-bold mb-2">🔧 デバッグモード</div>
-                <button
-                  onClick={() => startGameWithTournament('npb')}
-                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.7)] transition-all duration-300 transform hover:scale-105"
-                >
-                  NPBトーナメントから開始
-                </button>
-                <button
-                  onClick={() => startGameWithTournament('nlb')}
-                  className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
-                >
-                  NLBトーナメントから開始
-                </button>
+              <div className="mt-4 text-xs text-red-400">
+                🔧 デバッグモード有効
               </div>
             )}
           </div>
