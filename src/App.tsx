@@ -108,6 +108,8 @@ function App() {
   const [currentPitchInfo, setCurrentPitchInfo] = useState<{ type: string; speed: number } | null>(null)
   const [gameStarted, setGameStarted] = useState(false)
   const [volume, setVolume] = useState(0.5) // 0.0 to 1.0
+  const [debugMode, setDebugMode] = useState(false)
+  const [debugPressStartTime, setDebugPressStartTime] = useState<number | null>(null)
   const maxBalls = 4
   const maxStrikes = 3
 
@@ -202,6 +204,34 @@ function App() {
     oscillator.start()
     oscillator.stop(audioContextRef.current.currentTime + duration)
   }, [])
+
+  // Start game with specific tournament type (debug mode)
+  const startGameWithTournament = (tournamentType: TournamentType) => {
+    const baseScore = tournamentType === 'koshien' ? 3 : tournamentType === 'npb' ? 4 : 5
+    const cpuScore = baseScore
+
+    setGameState({
+      round: 1,
+      inning: 9,
+      outs: 0,
+      playerScore: 0,
+      cpuScore: cpuScore,
+      bases: [false, false, false],
+      tournamentRound: 1,
+      tournamentType: tournamentType,
+      isGameOver: false,
+      isWinner: false,
+      cpuInningScores: generateInningScores(cpuScore),
+      playerInningScores: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      showVictory: false,
+      cpuHits: Math.floor(Math.random() * 5) + (tournamentType === 'nlb' ? 8 : tournamentType === 'npb' ? 7 : 5),
+      cpuErrors: Math.floor(Math.random() * 2),
+      playerHits: Math.floor(Math.random() * 4) + 3,
+      playerErrors: Math.floor(Math.random() * 2)
+    })
+
+    setGameStarted(true)
+  }
 
   // Play drum beat (using noise)
   const playDrum = useCallback((type: 'kick' | 'snare' | 'hihat', duration: number) => {
@@ -1569,7 +1599,27 @@ function App() {
 
             <h3 className="text-lg sm:text-xl font-bold mb-3 md:mb-4 text-yellow-400">音量設定</h3>
             <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 md:mb-8">
-              <span className="text-xs sm:text-sm text-gray-400">🔇</span>
+              <span
+                className="text-xs sm:text-sm text-gray-400 cursor-pointer select-none"
+                onMouseDown={() => setDebugPressStartTime(Date.now())}
+                onMouseUp={() => {
+                  if (debugPressStartTime && Date.now() - debugPressStartTime >= 3000) {
+                    setDebugMode(true)
+                  }
+                  setDebugPressStartTime(null)
+                }}
+                onMouseLeave={() => setDebugPressStartTime(null)}
+                onTouchStart={() => setDebugPressStartTime(Date.now())}
+                onTouchEnd={() => {
+                  if (debugPressStartTime && Date.now() - debugPressStartTime >= 3000) {
+                    setDebugMode(true)
+                  }
+                  setDebugPressStartTime(null)
+                }}
+                onTouchCancel={() => setDebugPressStartTime(null)}
+              >
+                🔇
+              </span>
               <input
                 type="range"
                 min="0"
@@ -1591,6 +1641,24 @@ function App() {
             >
               プレイボール！
             </button>
+
+            {debugMode && (
+              <div className="mt-6 space-y-3">
+                <div className="text-sm text-red-400 font-bold mb-2">🔧 デバッグモード</div>
+                <button
+                  onClick={() => startGameWithTournament('npb')}
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.7)] transition-all duration-300 transform hover:scale-105"
+                >
+                  NPBトーナメントから開始
+                </button>
+                <button
+                  onClick={() => startGameWithTournament('nlb')}
+                  className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
+                >
+                  NLBトーナメントから開始
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="text-xs sm:text-sm text-gray-500">
