@@ -4,7 +4,7 @@ type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' |
 type HitResult = 'H' | '2B' | '3B' | 'HR' | 'OUT' | null
 type Base = boolean[]
 
-type TournamentType = 'koshien' | 'npb' | 'nlb'
+type TournamentType = 'koshien' | 'npb' | 'mlb'
 
 interface GameState {
   round: number
@@ -224,7 +224,7 @@ function App() {
       cpuInningScores: generateInningScores(cpuScore),
       playerInningScores: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       showVictory: false,
-      cpuHits: Math.floor(Math.random() * 5) + (tournamentType === 'nlb' ? 8 : tournamentType === 'npb' ? 7 : 5),
+      cpuHits: Math.floor(Math.random() * 5) + (tournamentType === 'mlb' ? 8 : tournamentType === 'npb' ? 7 : 5),
       cpuErrors: Math.floor(Math.random() * 2),
       playerHits: Math.floor(Math.random() * 4) + 3,
       playerErrors: Math.floor(Math.random() * 2)
@@ -446,8 +446,8 @@ function App() {
       else if (tournamentType === 'npb') {
         pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter']
       }
-      // NLB tournament - adds magical pitches
-      else if (tournamentType === 'nlb') {
+      // MLB tournament - adds magical pitches
+      else if (tournamentType === 'mlb') {
         pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
       }
 
@@ -737,7 +737,7 @@ function App() {
       }, 3000)
       return { ...state, showVictory: true }
     } else if (state.tournamentType === 'npb' && state.tournamentRound >= 5) {
-      // Move to NLB tournament
+      // Move to MLB tournament
       setTimeout(() => {
         setPitch(null)
         setBall(null)
@@ -747,7 +747,7 @@ function App() {
           const newCpuScore = 5
           return {
             ...prev,
-            tournamentType: 'nlb',
+            tournamentType: 'mlb',
             tournamentRound: 1,
             round: 1,
             inning: 9,
@@ -766,7 +766,7 @@ function App() {
         })
       }, 3000)
       return { ...state, showVictory: true }
-    } else if (state.tournamentType === 'nlb' && state.tournamentRound >= 5) {
+    } else if (state.tournamentType === 'mlb' && state.tournamentRound >= 5) {
       // Final victory
       return {
         ...state,
@@ -797,7 +797,7 @@ function App() {
           cpuInningScores: generateInningScores(newCpuScore),
           playerInningScores: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           showVictory: false,
-          cpuHits: Math.floor(Math.random() * 5) + (prev.tournamentType === 'nlb' ? 8 : prev.tournamentType === 'npb' ? 7 : 5),
+          cpuHits: Math.floor(Math.random() * 5) + (prev.tournamentType === 'mlb' ? 8 : prev.tournamentType === 'npb' ? 7 : 5),
           cpuErrors: Math.floor(Math.random() * 2),
           playerHits: Math.floor(Math.random() * 4) + 3,
           playerErrors: Math.floor(Math.random() * 2)
@@ -1559,8 +1559,8 @@ function App() {
     } else {
       const opponents = ['Yankees', 'Red Sox', 'Dodgers', 'Cubs', 'Astros']
       return {
-        title: 'NLB Tournament',
-        titleShort: 'NLB',
+        title: 'MLB Tournament',
+        titleShort: 'MLB',
         roundName: roundNames[round - 1],
         roundNameShort: roundNamesShort[round - 1],
         opponent: opponents[round - 1]
@@ -1652,10 +1652,10 @@ function App() {
                 NPBトーナメントから開始
               </button>
               <button
-                onClick={() => startGameWithTournament('nlb')}
+                onClick={() => startGameWithTournament('mlb')}
                 className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-lg sm:text-xl font-bold py-3 px-6 rounded-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
               >
-                NLBトーナメントから開始
+                MLBトーナメントから開始
               </button>
             </div>
 
