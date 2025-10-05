@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import * as Tone from 'tone'
 
 type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping'
 type HitResult = 'H' | '2B' | '3B' | 'HR' | 'OUT' | null
@@ -115,10 +116,11 @@ function App() {
 
   const pitchIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const animationFrameRef = useRef<number | null>(null)
-  const bgmIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const lastJudgedPitchRef = useRef<number>(0)
   const lastProcessedBallRef = useRef<number>(0)
   const gameLoopIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const toneSynthRef = useRef<Tone.PolySynth | null>(null)
+  const tonePartRef = useRef<Tone.Part | null>(null)
 
   // Get pitch type name in Japanese
   const getPitchName = (type: PitchType): string => {
@@ -241,8 +243,8 @@ function App() {
     setGameStarted(true)
   }
 
-  // Play drum beat (using noise)
-  const playDrum = useCallback((type: 'kick' | 'snare' | 'hihat', duration: number) => {
+  // Play drum beat (using noise) - 現在Tone.jsに移行したためコメントアウト
+  /* const playDrum = useCallback((type: 'kick' | 'snare' | 'hihat', duration: number) => {
     if (!audioContextRef.current || volumeRef.current === 0) return
 
     const context = audioContextRef.current
@@ -303,184 +305,154 @@ function App() {
 
       noise.start(context.currentTime)
     }
-  }, [])
+  }, []) */
 
-  // Background music loop
+  // Background music loop with Tone.js
+  useEffect(() => {
+    const initTone = async () => {
+      // Tone.jsの初期化
+      await Tone.start()
+
+      if (!toneSynthRef.current) {
+        // ブラスバンド風のシンセサイザーを作成
+        toneSynthRef.current = new Tone.PolySynth(Tone.Synth, {
+          oscillator: {
+            type: 'sawtooth'
+          },
+          envelope: {
+            attack: 0.02,
+            decay: 0.1,
+            sustain: 0.7,
+            release: 0.2
+          }
+        }).toDestination()
+
+        // 音量調整
+        toneSynthRef.current.volume.value = volume * 20 - 20 // -20dB to 0dB
+      }
+    }
+
+    if (gameStarted && !gameState.isGameOver && !gameState.showVictory) {
+      initTone()
+    }
+  }, [gameStarted, gameState.isGameOver, gameState.showVictory, volume])
+
+  // BGM playback with Tone.js
   useEffect(() => {
     if (!gameStarted || gameState.isGameOver || gameState.showVictory) {
-      // Stop BGM if game is over or showing victory
-      if (bgmIntervalRef.current) {
-        clearInterval(bgmIntervalRef.current)
-        bgmIntervalRef.current = null
+      // Stop BGM
+      if (tonePartRef.current) {
+        tonePartRef.current.stop()
+        tonePartRef.current.dispose()
+        tonePartRef.current = null
       }
+      Tone.getTransport().stop()
       return
     }
 
-    const playBGM = () => {
-      if (!audioContextRef.current) return
+    const playBGM = async () => {
+      // 既存のPartを停止
+      if (tonePartRef.current) {
+        tonePartRef.current.stop()
+        tonePartRef.current.dispose()
+      }
 
-      // BGM changes based on tournament round (gets more serious)
+      Tone.getTransport().stop()
+      Tone.getTransport().cancel() // すべてのスケジュールをクリア
+
       const round = gameState.tournamentRound
-      let notes: { freq: number; duration: number }[] = []
+      let notes: { time: string; note: string; duration: string }[] = []
 
       if (round === 1) {
-        // 1回戦 - Upbeat and cheerful (Aメロ→Bメロ→サビ構成)
         notes = [
-          // Aメロ (8小節)
-          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 },
-          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 },
-          { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.8 },
-          // Bメロ (8小節) - 展開部
-          { freq: 698, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 },
-          { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.8 },
-          { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
-          { freq: 659, duration: 0.8 }, { freq: 587, duration: 0.8 },
-          // サビ (8小節) - 盛り上がり
-          { freq: 784, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 },
-          { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.8 },
-          { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 880, duration: 0.4 },
-          { freq: 784, duration: 0.8 }, { freq: 659, duration: 0.8 }
+          {time: '0:0', note: 'C4', duration: '8n'}, {time: '0:1', note: 'D4', duration: '8n'},
+          {time: '0:2', note: 'E4', duration: '8n'}, {time: '0:3', note: 'C4', duration: '8n'},
+          {time: '1:0', note: 'E4', duration: '8n'}, {time: '1:1', note: 'F4', duration: '8n'},
+          {time: '1:2', note: 'E4', duration: '8n'}, {time: '1:3', note: 'D4', duration: '8n'},
+          {time: '2:0', note: 'C4', duration: '8n'}, {time: '2:1', note: 'D4', duration: '8n'},
+          {time: '2:2', note: 'E4', duration: '8n'}, {time: '2:3', note: 'F4', duration: '8n'},
+          {time: '3:0', note: 'E4', duration: '8n'}, {time: '3:1', note: 'D4', duration: '8n'},
+          {time: '3:2', note: 'C4', duration: '4n'},
+          // Bメロ
+          {time: '4:0', note: 'F4', duration: '8n'}, {time: '4:1', note: 'G4', duration: '8n'},
+          {time: '4:2', note: 'F4', duration: '8n'}, {time: '4:3', note: 'E4', duration: '8n'},
+          {time: '5:0', note: 'D4', duration: '8n'}, {time: '5:1', note: 'E4', duration: '8n'},
+          {time: '5:2', note: 'F4', duration: '4n'},
+          {time: '6:0', note: 'E4', duration: '8n'}, {time: '6:1', note: 'D4', duration: '8n'},
+          {time: '6:2', note: 'C4', duration: '8n'}, {time: '6:3', note: 'D4', duration: '8n'},
+          {time: '7:0', note: 'E4', duration: '4n'}, {time: '7:2', note: 'D4', duration: '4n'},
+          // サビ
+          {time: '8:0', note: 'G4', duration: '8n'}, {time: '8:1', note: 'G4', duration: '8n'},
+          {time: '8:2', note: 'F4', duration: '8n'}, {time: '8:3', note: 'E4', duration: '8n'},
+          {time: '9:0', note: 'F4', duration: '8n'}, {time: '9:1', note: 'E4', duration: '8n'},
+          {time: '9:2', note: 'D4', duration: '4n'},
+          {time: '10:0', note: 'E4', duration: '8n'}, {time: '10:1', note: 'F4', duration: '8n'},
+          {time: '10:2', note: 'G4', duration: '8n'}, {time: '10:3', note: 'A4', duration: '8n'},
+          {time: '11:0', note: 'G4', duration: '4n'}, {time: '11:2', note: 'E4', duration: '4n'}
         ]
       } else if (round === 2) {
-        // 2回戦 - Slightly tense (Aメロ→Bメロ→サビ構成)
         notes = [
-          // Aメロ (8小節)
-          { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
-          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
-          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          // Bメロ (8小節)
-          { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.8 },
-          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 },
-          { freq: 523, duration: 0.8 }, { freq: 493, duration: 0.8 },
-          // サビ (8小節)
-          { freq: 659, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.8 },
-          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 },
-          { freq: 659, duration: 0.8 }, { freq: 523, duration: 0.8 }
-        ]
-      } else if (round === 3) {
-        // 準々決勝 - More serious (Aメロ→Bメロ→サビ構成)
-        notes = [
-          // Aメロ (8小節)
-          { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.8 },
-          { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.8 },
-          // Bメロ (8小節)
-          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 },
-          { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.8 },
-          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 },
-          { freq: 466, duration: 0.8 }, { freq: 440, duration: 0.8 },
-          // サビ (8小節)
-          { freq: 587, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 },
-          { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 },
-          { freq: 587, duration: 0.8 }, { freq: 466, duration: 0.8 }
-        ]
-      } else if (round === 4) {
-        // 準決勝 - Dramatic (Aメロ→Bメロ→サビ構成)
-        notes = [
-          // Aメロ (8小節)
-          { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 },
-          { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 330, duration: 0.4 },
-          { freq: 349, duration: 0.8 }, { freq: 330, duration: 0.8 },
-          // Bメロ (8小節)
-          { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 },
-          { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 349, duration: 0.4 },
-          { freq: 392, duration: 0.8 }, { freq: 349, duration: 0.8 },
-          // サビ (8小節)
-          { freq: 494, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 },
-          { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.8 },
-          { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 494, duration: 0.8 }, { freq: 392, duration: 0.8 }
+          {time: '0:0', note: 'A3', duration: '8n'}, {time: '0:1', note: 'B3', duration: '8n'},
+          {time: '0:2', note: 'C4', duration: '8n'}, {time: '0:3', note: 'D4', duration: '8n'},
+          {time: '1:0', note: 'C4', duration: '8n'}, {time: '1:1', note: 'B3', duration: '8n'},
+          {time: '1:2', note: 'A3', duration: '4n'},
+          {time: '2:0', note: 'D4', duration: '8n'}, {time: '2:1', note: 'E4', duration: '8n'},
+          {time: '2:2', note: 'D4', duration: '8n'}, {time: '2:3', note: 'C4', duration: '8n'},
+          {time: '3:0', note: 'B3', duration: '8n'}, {time: '3:1', note: 'C4', duration: '8n'},
+          {time: '3:2', note: 'D4', duration: '4n'},
+          {time: '4:0', note: 'E4', duration: '8n'}, {time: '4:1', note: 'E4', duration: '8n'},
+          {time: '4:2', note: 'D4', duration: '8n'}, {time: '4:3', note: 'C4', duration: '8n'},
+          {time: '5:0', note: 'D4', duration: '8n'}, {time: '5:1', note: 'C4', duration: '8n'},
+          {time: '5:2', note: 'B3', duration: '4n'},
+          {time: '6:0', note: 'C4', duration: '8n'}, {time: '6:1', note: 'D4', duration: '8n'},
+          {time: '6:2', note: 'E4', duration: '8n'}, {time: '6:3', note: 'F4', duration: '8n'},
+          {time: '7:0', note: 'E4', duration: '4n'}, {time: '7:2', note: 'C4', duration: '4n'}
         ]
       } else {
-        // 決勝 - Epic and intense (Aメロ→Bメロ→サビ構成、マイナーキー)
         notes = [
-          // Aメロ (8小節)
-          { freq: 220, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 },
-          { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 262, duration: 0.8 },
-          { freq: 220, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 },
-          { freq: 330, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
-          // Bメロ (8小節) - より暗く劇的に
-          { freq: 330, duration: 0.4 }, { freq: 370, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 },
-          { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 330, duration: 0.8 },
-          { freq: 294, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 },
-          { freq: 294, duration: 0.8 }, { freq: 262, duration: 0.8 },
-          // サビ (8小節) - 壮大なクライマックス
-          { freq: 440, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 330, duration: 0.4 },
-          { freq: 392, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.8 },
-          { freq: 330, duration: 0.4 }, { freq: 370, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 },
-          { freq: 440, duration: 0.8 }, { freq: 330, duration: 0.8 }
+          {time: '0:0', note: 'A2', duration: '8n'}, {time: '0:1', note: 'B2', duration: '8n'},
+          {time: '0:2', note: 'C3', duration: '8n'}, {time: '0:3', note: 'D3', duration: '8n'},
+          {time: '1:0', note: 'E3', duration: '8n'}, {time: '1:1', note: 'D3', duration: '8n'},
+          {time: '1:2', note: 'C3', duration: '4n'},
+          {time: '2:0', note: 'E3', duration: '8n'}, {time: '2:1', note: 'F3', duration: '8n'},
+          {time: '2:2', note: 'E3', duration: '8n'}, {time: '2:3', note: 'D3', duration: '8n'},
+          {time: '3:0', note: 'C3', duration: '8n'}, {time: '3:1', note: 'D3', duration: '8n'},
+          {time: '3:2', note: 'E3', duration: '4n'},
+          {time: '4:0', note: 'A3', duration: '8n'}, {time: '4:1', note: 'A3', duration: '8n'},
+          {time: '4:2', note: 'G3', duration: '8n'}, {time: '4:3', note: 'E3', duration: '8n'},
+          {time: '5:0', note: 'G3', duration: '8n'}, {time: '5:1', note: 'E3', duration: '8n'},
+          {time: '5:2', note: 'D3', duration: '4n'},
+          {time: '6:0', note: 'E3', duration: '8n'}, {time: '6:1', note: 'F3', duration: '8n'},
+          {time: '6:2', note: 'A3', duration: '8n'}, {time: '6:3', note: 'B3', duration: '8n'},
+          {time: '7:0', note: 'A3', duration: '4n'}, {time: '7:2', note: 'E3', duration: '4n'}
         ]
       }
 
-      let time = 0
-      let totalDuration = 0
-      notes.forEach(note => {
-        setTimeout(() => {
-          // ラッパ風の音色（sawtooth）で応援団チャントっぽく
-          playSound(note.freq, note.duration, 'sawtooth')
-        }, time * 1000)
-        time += note.duration
-        totalDuration += note.duration
-      })
+      // Tone.js Partを作成
+      if (toneSynthRef.current && notes.length > 0) {
+        tonePartRef.current = new Tone.Part((time, value) => {
+          toneSynthRef.current?.triggerAttackRelease(value.note, value.duration, time)
+        }, notes).start(0)
 
-      // Add drum beat - simple 4/4 pattern (Aメロ→Bメロ→サビに合わせて24小節)
-      const drumPattern: { type: 'kick' | 'snare' | 'hihat'; time: number; duration: number }[] = []
+        tonePartRef.current.loop = true
+        tonePartRef.current.loopEnd = '8m' // 8小節でループ
 
-      // Number of bars (24 bars = 8 bars × 3 sections)
-      const bars = 24
-
-      // Standard 4/4 drum pattern
-      for (let bar = 0; bar < bars; bar++) {
-        const barOffset = bar * 1.6 // Each bar is 1.6 seconds (4 beats × 0.4s)
-
-        // Beat 1: Kick
-        drumPattern.push({ type: 'kick', time: barOffset + 0, duration: 0.1 })
-        drumPattern.push({ type: 'hihat', time: barOffset + 0, duration: 0.05 })
-
-        // Beat 2: Hihat
-        drumPattern.push({ type: 'hihat', time: barOffset + 0.4, duration: 0.05 })
-
-        // Beat 3: Snare
-        drumPattern.push({ type: 'snare', time: barOffset + 0.8, duration: 0.1 })
-        drumPattern.push({ type: 'hihat', time: barOffset + 0.8, duration: 0.05 })
-
-        // Beat 4: Hihat
-        drumPattern.push({ type: 'hihat', time: barOffset + 1.2, duration: 0.05 })
+        Tone.getTransport().bpm.value = 120
+        Tone.getTransport().start()
       }
-
-      drumPattern.forEach(drum => {
-        setTimeout(() => {
-          playDrum(drum.type, drum.duration)
-        }, drum.time * 1000)
-      })
-
-      // Return total duration for accurate loop timing
-      return totalDuration
     }
 
-    // Play first loop and calculate exact duration
-    const duration = playBGM()
-
-    // Loop based on actual total duration (in milliseconds)
-    if (duration) {
-      bgmIntervalRef.current = setInterval(playBGM, duration * 1000)
-    }
+    playBGM()
 
     return () => {
-      if (bgmIntervalRef.current) {
-        clearInterval(bgmIntervalRef.current)
-        bgmIntervalRef.current = null
+      if (tonePartRef.current) {
+        tonePartRef.current.stop()
+        tonePartRef.current.dispose()
+        tonePartRef.current = null
       }
+      Tone.getTransport().stop()
     }
-  }, [playSound, playDrum, gameState.tournamentRound, gameStarted, gameState.isGameOver, gameState.showVictory])
+  }, [gameState.tournamentRound, gameStarted, gameState.isGameOver, gameState.showVictory])
 
   // Auto pitch
   useEffect(() => {
