@@ -324,44 +324,99 @@ function App() {
       let notes: { freq: number; duration: number }[] = []
 
       if (round === 1) {
-        // 1回戦 - Upbeat and cheerful (4/4, 8 bars)
+        // 1回戦 - Upbeat and cheerful (Aメロ→Bメロ→サビ構成)
         notes = [
+          // Aメロ (8小節)
           { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 523, duration: 0.4 },
           { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 },
           { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 },
-          { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.8 }
+          { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.8 },
+          // Bメロ (8小節) - 展開部
+          { freq: 698, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 },
+          { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.8 },
+          { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
+          { freq: 659, duration: 0.8 }, { freq: 587, duration: 0.8 },
+          // サビ (8小節) - 盛り上がり
+          { freq: 784, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 },
+          { freq: 698, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.8 },
+          { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 }, { freq: 784, duration: 0.4 }, { freq: 880, duration: 0.4 },
+          { freq: 784, duration: 0.8 }, { freq: 659, duration: 0.8 }
         ]
       } else if (round === 2) {
-        // 2回戦 - Slightly tense (4/4, 8 bars)
+        // 2回戦 - Slightly tense (Aメロ→Bメロ→サビ構成)
         notes = [
+          // Aメロ (8小節)
           { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
           { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.8 },
           { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 },
-          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.8 }
+          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.8 },
+          // Bメロ (8小節)
+          { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 },
+          { freq: 493, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.8 },
+          { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 493, duration: 0.4 },
+          { freq: 523, duration: 0.8 }, { freq: 493, duration: 0.8 },
+          // サビ (8小節)
+          { freq: 659, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 },
+          { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 493, duration: 0.8 },
+          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 }, { freq: 698, duration: 0.4 },
+          { freq: 659, duration: 0.8 }, { freq: 523, duration: 0.8 }
         ]
       } else if (round === 3) {
-        // 準々決勝 - More serious (4/4, 8 bars)
+        // 準々決勝 - More serious (Aメロ→Bメロ→サビ構成)
         notes = [
+          // Aメロ (8小節)
           { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 },
           { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.8 },
           { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 },
-          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.8 }
+          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.8 },
+          // Bメロ (8小節)
+          { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 },
+          { freq: 440, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.8 },
+          { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 },
+          { freq: 466, duration: 0.8 }, { freq: 440, duration: 0.8 },
+          // サビ (8小節)
+          { freq: 587, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 },
+          { freq: 523, duration: 0.4 }, { freq: 466, duration: 0.4 }, { freq: 440, duration: 0.8 },
+          { freq: 466, duration: 0.4 }, { freq: 523, duration: 0.4 }, { freq: 587, duration: 0.4 }, { freq: 659, duration: 0.4 },
+          { freq: 587, duration: 0.8 }, { freq: 466, duration: 0.8 }
         ]
       } else if (round === 4) {
-        // 準決勝 - Dramatic (4/4, 8 bars)
+        // 準決勝 - Dramatic (Aメロ→Bメロ→サビ構成)
         notes = [
+          // Aメロ (8小節)
           { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 },
           { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
           { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 330, duration: 0.4 },
-          { freq: 349, duration: 0.8 }, { freq: 330, duration: 0.8 }
+          { freq: 349, duration: 0.8 }, { freq: 330, duration: 0.8 },
+          // Bメロ (8小節)
+          { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 },
+          { freq: 349, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
+          { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 349, duration: 0.4 },
+          { freq: 392, duration: 0.8 }, { freq: 349, duration: 0.8 },
+          // サビ (8小節)
+          { freq: 494, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 },
+          { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 349, duration: 0.8 },
+          { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 }, { freq: 523, duration: 0.4 },
+          { freq: 494, duration: 0.8 }, { freq: 392, duration: 0.8 }
         ]
       } else {
-        // 決勝 - Epic and intense with minor key and seventh chords (4/4, 8 bars)
+        // 決勝 - Epic and intense (Aメロ→Bメロ→サビ構成、マイナーキー)
         notes = [
+          // Aメロ (8小節)
           { freq: 220, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 },
           { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 262, duration: 0.8 },
           { freq: 220, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 },
-          { freq: 330, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 }
+          { freq: 330, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 440, duration: 0.8 },
+          // Bメロ (8小節) - より暗く劇的に
+          { freq: 330, duration: 0.4 }, { freq: 370, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.4 },
+          { freq: 262, duration: 0.4 }, { freq: 294, duration: 0.4 }, { freq: 330, duration: 0.8 },
+          { freq: 294, duration: 0.4 }, { freq: 262, duration: 0.4 }, { freq: 247, duration: 0.4 }, { freq: 262, duration: 0.4 },
+          { freq: 294, duration: 0.8 }, { freq: 262, duration: 0.8 },
+          // サビ (8小節) - 壮大なクライマックス
+          { freq: 440, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 392, duration: 0.4 }, { freq: 330, duration: 0.4 },
+          { freq: 392, duration: 0.4 }, { freq: 330, duration: 0.4 }, { freq: 294, duration: 0.8 },
+          { freq: 330, duration: 0.4 }, { freq: 370, duration: 0.4 }, { freq: 440, duration: 0.4 }, { freq: 494, duration: 0.4 },
+          { freq: 440, duration: 0.8 }, { freq: 330, duration: 0.8 }
         ]
       }
 
@@ -376,11 +431,11 @@ function App() {
         totalDuration += note.duration
       })
 
-      // Add drum beat - simple 4/4 pattern
+      // Add drum beat - simple 4/4 pattern (Aメロ→Bメロ→サビに合わせて24小節)
       const drumPattern: { type: 'kick' | 'snare' | 'hihat'; time: number; duration: number }[] = []
 
-      // Number of bars (8 bars for all rounds)
-      const bars = 8
+      // Number of bars (24 bars = 8 bars × 3 sections)
+      const bars = 24
 
       // Standard 4/4 drum pattern
       for (let bar = 0; bar < bars; bar++) {
