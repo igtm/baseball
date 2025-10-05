@@ -198,8 +198,16 @@ function App() {
     oscillator.type = type
     oscillator.frequency.value = frequency
 
-    gainNode.gain.setValueAtTime(0.3 * volumeRef.current, audioContextRef.current.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(Math.max(0.01 * volumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
+    // ラッパ風の音色の場合は、立ち上がりが速く減衰が緩やかなエンベロープを使用
+    if (type === 'sawtooth') {
+      const attackTime = 0.02 // 速いアタック
+      gainNode.gain.setValueAtTime(0, audioContextRef.current.currentTime)
+      gainNode.gain.linearRampToValueAtTime(0.25 * volumeRef.current, audioContextRef.current.currentTime + attackTime)
+      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.15 * volumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
+    } else {
+      gainNode.gain.setValueAtTime(0.3 * volumeRef.current, audioContextRef.current.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.01 * volumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
+    }
 
     oscillator.start()
     oscillator.stop(audioContextRef.current.currentTime + duration)
@@ -361,7 +369,8 @@ function App() {
       let totalDuration = 0
       notes.forEach(note => {
         setTimeout(() => {
-          playSound(note.freq, note.duration, 'triangle')
+          // ラッパ風の音色（sawtooth）で応援団チャントっぽく
+          playSound(note.freq, note.duration, 'sawtooth')
         }, time * 1000)
         time += note.duration
         totalDuration += note.duration
