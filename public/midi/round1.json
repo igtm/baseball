@@ -1,0 +1,3647 @@
+{
+  "tracks": [
+    {
+      "name": "melody",
+      "clip": [
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "F4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "G4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        }
+      ]
+    },
+    {
+      "name": "bass",
+      "clip": [
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb2",
+            "D3",
+            "F3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "C3",
+            "E3",
+            "G3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "A2",
+            "C3",
+            "E3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": [
+            "D3",
+            "F3",
+            "A3"
+          ],
+          "length": 32,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 32,
+          "level": 100
+        }
+      ]
+    },
+    {
+      "name": "chords",
+      "clip": [
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "Bb4",
+            "D5",
+            "F5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "C5",
+            "E5",
+            "G5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "A4",
+            "C5",
+            "E5"
+          ],
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        },
+        {
+          "note": [
+            "D5",
+            "F5",
+            "A5"
+          ],
+          "length": 64,
+          "level": 70
+        },
+        {
+          "note": null,
+          "length": 64,
+          "level": 100
+        }
+      ]
+    }
+  ]
+}

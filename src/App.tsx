@@ -108,7 +108,14 @@ function App() {
   const [strikes, setStrikes] = useState(0)
   const [currentPitchInfo, setCurrentPitchInfo] = useState<{ type: string; speed: number } | null>(null)
   const [gameStarted, setGameStarted] = useState(false)
-  const [volume, setVolume] = useState(0.5) // 0.0 to 1.0
+  const [bgmVolume, setBgmVolume] = useState(() => {
+    const saved = localStorage.getItem('bgmVolume')
+    return saved !== null ? parseFloat(saved) : 0.5
+  }) // BGM音量 0.0 to 1.0
+  const [seVolume, setSeVolume] = useState(() => {
+    const saved = localStorage.getItem('seVolume')
+    return saved !== null ? parseFloat(saved) : 0.5
+  }) // SE音量 0.0 to 1.0
   const [debugMode, setDebugMode] = useState(false)
   const [debugPressStartTime, setDebugPressStartTime] = useState<number | null>(null)
   const maxBalls = 4
@@ -120,7 +127,13 @@ function App() {
   const lastProcessedBallRef = useRef<number>(0)
   const gameLoopIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const toneSynthRef = useRef<Tone.PolySynth | null>(null)
+  const bassSynthRef = useRef<Tone.Synth | null>(null)
+  const guitarRef = useRef<Tone.PolySynth | null>(null)
+  const kickRef = useRef<Tone.MembraneSynth | null>(null)
+  const snareRef = useRef<Tone.NoiseSynth | null>(null)
+  const hihatRef = useRef<Tone.MetalSynth | null>(null)
   const tonePartRef = useRef<Tone.Part | null>(null)
+  const drumPartRef = useRef<Tone.Part | null>(null)
 
   // Get pitch type name in Japanese
   const getPitchName = (type: PitchType): string => {
@@ -157,6 +170,15 @@ function App() {
     }
   }, [])
 
+  // Save volume settings to localStorage
+  useEffect(() => {
+    localStorage.setItem('bgmVolume', bgmVolume.toString())
+  }, [bgmVolume])
+
+  useEffect(() => {
+    localStorage.setItem('seVolume', seVolume.toString())
+  }, [seVolume])
+
   // Handle canvas resize for mobile
   useEffect(() => {
     const updateCanvasSize = () => {
@@ -181,15 +203,19 @@ function App() {
     return () => window.removeEventListener('resize', updateCanvasSize)
   }, [])
 
-  // Volume ref to avoid recreating callbacks
-  const volumeRef = useRef(volume)
+  // Volume refs to avoid recreating callbacks
+  const bgmVolumeRef = useRef(bgmVolume)
+  const seVolumeRef = useRef(seVolume)
   useEffect(() => {
-    volumeRef.current = volume
-  }, [volume])
+    bgmVolumeRef.current = bgmVolume
+  }, [bgmVolume])
+  useEffect(() => {
+    seVolumeRef.current = seVolume
+  }, [seVolume])
 
   // Play sound effect
   const playSound = useCallback((frequency: number, duration: number, type: OscillatorType = 'sine') => {
-    if (!audioContextRef.current || volumeRef.current === 0) return
+    if (!audioContextRef.current || seVolumeRef.current === 0) return
 
     const oscillator = audioContextRef.current.createOscillator()
     const gainNode = audioContextRef.current.createGain()
@@ -204,15 +230,106 @@ function App() {
     if (type === 'sawtooth') {
       const attackTime = 0.02 // 速いアタック
       gainNode.gain.setValueAtTime(0, audioContextRef.current.currentTime)
-      gainNode.gain.linearRampToValueAtTime(0.25 * volumeRef.current, audioContextRef.current.currentTime + attackTime)
-      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.15 * volumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
+      gainNode.gain.linearRampToValueAtTime(0.25 * seVolumeRef.current, audioContextRef.current.currentTime + attackTime)
+      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.15 * seVolumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
     } else {
-      gainNode.gain.setValueAtTime(0.3 * volumeRef.current, audioContextRef.current.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.01 * volumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
+      gainNode.gain.setValueAtTime(0.3 * seVolumeRef.current, audioContextRef.current.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(Math.max(0.01 * seVolumeRef.current, 0.0001), audioContextRef.current.currentTime + duration)
     }
 
     oscillator.start()
     oscillator.stop(audioContextRef.current.currentTime + duration)
+  }, [])
+
+  // 投球音: ボールが空気を切る「シュッ」という音（短く一気に大きくなる風切り音）
+  const playPitchSound = useCallback(() => {
+    if (!audioContextRef.current || seVolumeRef.current === 0) return
+
+    const context = audioContextRef.current
+    const now = context.currentTime
+
+    // ホワイトノイズを作成
+    const bufferSize = context.sampleRate * 0.04
+    const buffer = context.createBuffer(1, bufferSize, context.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1
+    }
+
+    const noise = context.createBufferSource()
+    noise.buffer = buffer
+
+    // ハイパスフィルターで高周波のみ（風切り音）
+    const highpass = context.createBiquadFilter()
+    highpass.type = 'highpass'
+    highpass.frequency.value = 4500
+
+    const gain = context.createGain()
+    // 一気に大きくなって、ピークから少し下げてから終わる（自然に）
+    gain.gain.setValueAtTime(0.001, now)
+    gain.gain.exponentialRampToValueAtTime(0.3 * seVolumeRef.current, now + 0.03) // ピークに到達
+    gain.gain.exponentialRampToValueAtTime(0.1 * seVolumeRef.current, now + 0.038) // 少し下げる
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04) // 自然に終わる
+
+    noise.connect(highpass)
+    highpass.connect(gain)
+    gain.connect(context.destination)
+
+    noise.start(now)
+    noise.stop(now + 0.04)
+  }, [])
+
+  // 打球音: 木製バットに当たる乾いた「カッ」という音（スネアドラム風）
+  const playBatSound = useCallback(() => {
+    if (!audioContextRef.current || seVolumeRef.current === 0) return
+
+    const context = audioContextRef.current
+    const now = context.currentTime
+
+    // スネアドラムのような乾いた音を作る
+    // 1. ホワイトノイズ（スナッピー感）- より短く
+    const bufferSize = context.sampleRate * 0.04
+    const buffer = context.createBuffer(1, bufferSize, context.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.1))
+    }
+
+    const noise = context.createBufferSource()
+    noise.buffer = buffer
+
+    // ハイパスフィルターでさらに高域のみ
+    const highpass = context.createBiquadFilter()
+    highpass.type = 'highpass'
+    highpass.frequency.value = 7000 // 5000 → 7000（さらに高く）
+    highpass.Q.value = 1.5
+
+    const noiseGain = context.createGain()
+    noiseGain.gain.setValueAtTime(0.8 * seVolumeRef.current, now)
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04)
+
+    noise.connect(highpass)
+    highpass.connect(noiseGain)
+    noiseGain.connect(context.destination)
+
+    noise.start(now)
+
+    // 2. 高周波トーン（金属的な響き）- さらに高く
+    const osc = context.createOscillator()
+    const oscGain = context.createGain()
+
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(2000, now) // 800 → 2000（高く）
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.03) // 300 → 800
+
+    oscGain.gain.setValueAtTime(0.4 * seVolumeRef.current, now)
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03)
+
+    osc.connect(oscGain)
+    oscGain.connect(context.destination)
+
+    osc.start(now)
+    osc.stop(now + 0.04)
   }, [])
 
   // Start game with specific tournament type (debug mode)
@@ -307,37 +424,7 @@ function App() {
     }
   }, []) */
 
-  // Background music loop with Tone.js
-  useEffect(() => {
-    const initTone = async () => {
-      // Tone.jsの初期化
-      await Tone.start()
-
-      if (!toneSynthRef.current) {
-        // ブラスバンド風のシンセサイザーを作成
-        toneSynthRef.current = new Tone.PolySynth(Tone.Synth, {
-          oscillator: {
-            type: 'sawtooth'
-          },
-          envelope: {
-            attack: 0.02,
-            decay: 0.1,
-            sustain: 0.7,
-            release: 0.2
-          }
-        }).toDestination()
-
-        // 音量調整
-        toneSynthRef.current.volume.value = volume * 20 - 20 // -20dB to 0dB
-      }
-    }
-
-    if (gameStarted && !gameState.isGameOver && !gameState.showVictory) {
-      initTone()
-    }
-  }, [gameStarted, gameState.isGameOver, gameState.showVictory, volume])
-
-  // BGM playback with Tone.js
+  // Background music loop with Tone.js + MIDI
   useEffect(() => {
     if (!gameStarted || gameState.isGameOver || gameState.showVictory) {
       // Stop BGM
@@ -346,11 +433,129 @@ function App() {
         tonePartRef.current.dispose()
         tonePartRef.current = null
       }
+      if (drumPartRef.current) {
+        drumPartRef.current.stop()
+        drumPartRef.current.dispose()
+        drumPartRef.current = null
+      }
       Tone.getTransport().stop()
       return
     }
 
     const playBGM = async () => {
+      // Tone.jsの初期化（ユーザーインタラクション後）
+      await Tone.start()
+      console.log('Tone.js started')
+
+      // メロディ用 - モダンなFMシンセ（YOASOBIやヨルシカ風）
+      if (!toneSynthRef.current) {
+        toneSynthRef.current = new Tone.PolySynth(Tone.FMSynth, {
+          harmonicity: 3,      // 倍音の美しさ
+          modulationIndex: 10, // モジュレーションの深さ
+          oscillator: {
+            type: 'sine'
+          },
+          envelope: {
+            attack: 0.01,
+            decay: 0.1,
+            sustain: 0.1,    // 短めの持続音
+            release: 0.05    // 短いリリース（音の重なりを防ぐ）
+          },
+          modulation: {
+            type: 'square'  // モダンなエッジ
+          },
+          modulationEnvelope: {
+            attack: 0.01,
+            decay: 0.1,
+            sustain: 0.1,
+            release: 0.05
+          }
+        }).toDestination()
+        console.log('FM Synth created')
+      }
+
+      // Bass専用シンセサイザー - クリーンな正弦波
+      if (!bassSynthRef.current) {
+        bassSynthRef.current = new Tone.Synth({
+          oscillator: {
+            type: 'sine' // 正弦波（最もクリーンな音）
+          },
+          envelope: {
+            attack: 0.1,
+            decay: 0.3,
+            sustain: 0.5,
+            release: 1
+          }
+        }).toDestination()
+        console.log('Bass synth created')
+      }
+
+      // キックドラム
+      if (!kickRef.current) {
+        kickRef.current = new Tone.MembraneSynth({
+          pitchDecay: 0.05,
+          octaves: 10,
+          oscillator: { type: 'sine' },
+          envelope: {
+            attack: 0.001,
+            decay: 0.4,
+            sustain: 0.01,
+            release: 1.4,
+            attackCurve: 'exponential'
+          }
+        }).toDestination()
+      }
+
+      // スネアドラム
+      if (!snareRef.current) {
+        snareRef.current = new Tone.NoiseSynth({
+          noise: { type: 'white' },
+          envelope: {
+            attack: 0.001,
+            decay: 0.2,
+            sustain: 0
+          }
+        }).toDestination()
+      }
+
+      // ハイハット
+      if (!hihatRef.current) {
+        hihatRef.current = new Tone.MetalSynth({
+          envelope: {
+            attack: 0.001,
+            decay: 0.1,
+            release: 0.01
+          },
+          harmonicity: 5.1,
+          modulationIndex: 32,
+          resonance: 4000,
+          octaves: 1.5
+        }).toDestination()
+      }
+
+      // エレキギター（コード用）
+      if (!guitarRef.current) {
+        guitarRef.current = new Tone.PolySynth(Tone.Synth, {
+          oscillator: {
+            type: 'square' // 矩形波（エレキギター風）
+          },
+          envelope: {
+            attack: 0.01,
+            decay: 0.2,
+            sustain: 0.3,
+            release: 0.4
+          }
+        }).toDestination()
+      }
+
+      // 音量調整（BGMは控えめに）
+      toneSynthRef.current.volume.value = bgmVolume * 20 - 40 // -40dB to -20dB
+      bassSynthRef.current.volume.value = bgmVolume * 20 - 40 // -40dB to -20dB
+      guitarRef.current.volume.value = bgmVolume * 20 - 38 // -38dB to -18dB
+      kickRef.current.volume.value = bgmVolume * 20 - 35 // -35dB to -15dB
+      snareRef.current.volume.value = bgmVolume * 20 - 38 // -38dB to -18dB
+      hihatRef.current.volume.value = bgmVolume * 20 - 42 // -42dB to -22dB（控えめ）
+
       // 既存のPartを停止
       if (tonePartRef.current) {
         tonePartRef.current.stop()
@@ -360,85 +565,183 @@ function App() {
       Tone.getTransport().stop()
       Tone.getTransport().cancel() // すべてのスケジュールをクリア
 
+      // JSONファイルをロード
       const round = gameState.tournamentRound
-      let notes: { time: string; note: string; duration: string }[] = []
+      const jsonFile = `/baseball/midi/round${round}.json`
 
-      if (round === 1) {
-        notes = [
-          {time: '0:0', note: 'C4', duration: '8n'}, {time: '0:1', note: 'D4', duration: '8n'},
-          {time: '0:2', note: 'E4', duration: '8n'}, {time: '0:3', note: 'C4', duration: '8n'},
-          {time: '1:0', note: 'E4', duration: '8n'}, {time: '1:1', note: 'F4', duration: '8n'},
-          {time: '1:2', note: 'E4', duration: '8n'}, {time: '1:3', note: 'D4', duration: '8n'},
-          {time: '2:0', note: 'C4', duration: '8n'}, {time: '2:1', note: 'D4', duration: '8n'},
-          {time: '2:2', note: 'E4', duration: '8n'}, {time: '2:3', note: 'F4', duration: '8n'},
-          {time: '3:0', note: 'E4', duration: '8n'}, {time: '3:1', note: 'D4', duration: '8n'},
-          {time: '3:2', note: 'C4', duration: '4n'},
-          // Bメロ
-          {time: '4:0', note: 'F4', duration: '8n'}, {time: '4:1', note: 'G4', duration: '8n'},
-          {time: '4:2', note: 'F4', duration: '8n'}, {time: '4:3', note: 'E4', duration: '8n'},
-          {time: '5:0', note: 'D4', duration: '8n'}, {time: '5:1', note: 'E4', duration: '8n'},
-          {time: '5:2', note: 'F4', duration: '4n'},
-          {time: '6:0', note: 'E4', duration: '8n'}, {time: '6:1', note: 'D4', duration: '8n'},
-          {time: '6:2', note: 'C4', duration: '8n'}, {time: '6:3', note: 'D4', duration: '8n'},
-          {time: '7:0', note: 'E4', duration: '4n'}, {time: '7:2', note: 'D4', duration: '4n'},
-          // サビ
-          {time: '8:0', note: 'G4', duration: '8n'}, {time: '8:1', note: 'G4', duration: '8n'},
-          {time: '8:2', note: 'F4', duration: '8n'}, {time: '8:3', note: 'E4', duration: '8n'},
-          {time: '9:0', note: 'F4', duration: '8n'}, {time: '9:1', note: 'E4', duration: '8n'},
-          {time: '9:2', note: 'D4', duration: '4n'},
-          {time: '10:0', note: 'E4', duration: '8n'}, {time: '10:1', note: 'F4', duration: '8n'},
-          {time: '10:2', note: 'G4', duration: '8n'}, {time: '10:3', note: 'A4', duration: '8n'},
-          {time: '11:0', note: 'G4', duration: '4n'}, {time: '11:2', note: 'E4', duration: '4n'}
-        ]
-      } else if (round === 2) {
-        notes = [
-          {time: '0:0', note: 'A3', duration: '8n'}, {time: '0:1', note: 'B3', duration: '8n'},
-          {time: '0:2', note: 'C4', duration: '8n'}, {time: '0:3', note: 'D4', duration: '8n'},
-          {time: '1:0', note: 'C4', duration: '8n'}, {time: '1:1', note: 'B3', duration: '8n'},
-          {time: '1:2', note: 'A3', duration: '4n'},
-          {time: '2:0', note: 'D4', duration: '8n'}, {time: '2:1', note: 'E4', duration: '8n'},
-          {time: '2:2', note: 'D4', duration: '8n'}, {time: '2:3', note: 'C4', duration: '8n'},
-          {time: '3:0', note: 'B3', duration: '8n'}, {time: '3:1', note: 'C4', duration: '8n'},
-          {time: '3:2', note: 'D4', duration: '4n'},
-          {time: '4:0', note: 'E4', duration: '8n'}, {time: '4:1', note: 'E4', duration: '8n'},
-          {time: '4:2', note: 'D4', duration: '8n'}, {time: '4:3', note: 'C4', duration: '8n'},
-          {time: '5:0', note: 'D4', duration: '8n'}, {time: '5:1', note: 'C4', duration: '8n'},
-          {time: '5:2', note: 'B3', duration: '4n'},
-          {time: '6:0', note: 'C4', duration: '8n'}, {time: '6:1', note: 'D4', duration: '8n'},
-          {time: '6:2', note: 'E4', duration: '8n'}, {time: '6:3', note: 'F4', duration: '8n'},
-          {time: '7:0', note: 'E4', duration: '4n'}, {time: '7:2', note: 'C4', duration: '4n'}
-        ]
-      } else {
-        notes = [
-          {time: '0:0', note: 'A2', duration: '8n'}, {time: '0:1', note: 'B2', duration: '8n'},
-          {time: '0:2', note: 'C3', duration: '8n'}, {time: '0:3', note: 'D3', duration: '8n'},
-          {time: '1:0', note: 'E3', duration: '8n'}, {time: '1:1', note: 'D3', duration: '8n'},
-          {time: '1:2', note: 'C3', duration: '4n'},
-          {time: '2:0', note: 'E3', duration: '8n'}, {time: '2:1', note: 'F3', duration: '8n'},
-          {time: '2:2', note: 'E3', duration: '8n'}, {time: '2:3', note: 'D3', duration: '8n'},
-          {time: '3:0', note: 'C3', duration: '8n'}, {time: '3:1', note: 'D3', duration: '8n'},
-          {time: '3:2', note: 'E3', duration: '4n'},
-          {time: '4:0', note: 'A3', duration: '8n'}, {time: '4:1', note: 'A3', duration: '8n'},
-          {time: '4:2', note: 'G3', duration: '8n'}, {time: '4:3', note: 'E3', duration: '8n'},
-          {time: '5:0', note: 'G3', duration: '8n'}, {time: '5:1', note: 'E3', duration: '8n'},
-          {time: '5:2', note: 'D3', duration: '4n'},
-          {time: '6:0', note: 'E3', duration: '8n'}, {time: '6:1', note: 'F3', duration: '8n'},
-          {time: '6:2', note: 'A3', duration: '8n'}, {time: '6:3', note: 'B3', duration: '8n'},
-          {time: '7:0', note: 'A3', duration: '4n'}, {time: '7:2', note: 'E3', duration: '4n'}
-        ]
-      }
+      try {
+        const response = await fetch(jsonFile)
+        const data = await response.json()
+        console.log('Music data loaded:', jsonFile)
 
-      // Tone.js Partを作成
-      if (toneSynthRef.current && notes.length > 0) {
-        tonePartRef.current = new Tone.Part((time, value) => {
-          toneSynthRef.current?.triggerAttackRelease(value.note, value.duration, time)
-        }, notes).start(0)
+        // Scribbletune clipデータからTone.js用のノート配列を作成
+        const notes: { time: string; note: string; duration: string; isBass?: boolean; isGuitar?: boolean }[] = []
 
-        tonePartRef.current.loop = true
-        tonePartRef.current.loopEnd = '8m' // 8小節でループ
+        data.tracks.forEach((track: any) => {
+          // chordsトラックをスキップ
+          if (track.name === 'chords') return
 
-        Tone.getTransport().bpm.value = 120
-        Tone.getTransport().start()
+          const clip = track.clip
+          let position = 0 // ステップ位置
+
+          clip.forEach((step: any) => {
+            // 各トラックの再生間隔を設定
+            let interval = 2
+            if (track.name === 'bass') {
+              interval = 16
+            } else if (track.name === 'melody') {
+              // メロディは1つおきや3つおきなど変化をつける
+              interval = position % 8 === 0 ? 1 : (position % 5 === 0 ? 3 : 2)
+            } else if (track.name === 'chords') {
+              interval = 4 // コードは4つおき
+            }
+
+            if (step.note && step.note !== null && position % interval === 0) {
+              const noteArray = Array.isArray(step.note) ? step.note : [step.note]
+              const length = step.length || 64 // デフォルト長さ
+
+              // メロディは様々な音価を使用
+              let duration = '4n'
+              if (track.name === 'bass') {
+                duration = '4n'
+              } else if (track.name === 'melody') {
+                // 位置によって音価を変える
+                if (position % 8 === 0) {
+                  duration = '4n.'  // 付点4分音符
+                } else if (position % 6 === 0) {
+                  duration = '2n'   // 2分音符
+                } else if (position % 3 === 0) {
+                  duration = '8n'   // 8分音符
+                } else {
+                  duration = '4n'   // 4分音符
+                }
+              } else {
+                duration = length >= 64 ? '4n' : '8n'
+              }
+
+              noteArray.forEach((note: string) => {
+                // 位置を小節:拍:16分音符の形式に変換
+                const sixteenths = Math.floor(position / 2) // 2ステップ = 1/16分音符
+                const measure = Math.floor(sixteenths / 16)
+                const beat = Math.floor((sixteenths % 16) / 4)
+                const subdivision = (sixteenths % 16) % 4
+                const time = `${measure}:${beat}:${subdivision}`
+
+                notes.push({
+                  time: time,
+                  note: note,
+                  duration: duration,
+                  isBass: track.name === 'bass',
+                  isGuitar: track.name === 'chords'
+                })
+              })
+            }
+            position++
+          })
+        })
+
+        console.log('Total notes:', notes.length)
+        console.log('First 5 notes:', notes.slice(0, 5))
+
+        // Tone.js Partを作成
+        if (toneSynthRef.current && notes.length > 0) {
+          console.log('Creating Part with', notes.length, 'notes from JSON')
+
+          tonePartRef.current = new Tone.Part((time, value) => {
+            // 各トラック専用のシンセで再生（bassは無効化）
+            if (value.isBass) {
+              // bassを消す
+            } else if (value.isGuitar) {
+              guitarRef.current?.triggerAttackRelease(value.note, value.duration, time)
+            } else {
+              // メロディ: 前の音を完全に停止してから新しい音を鳴らす
+              if (toneSynthRef.current) {
+                // 前の音を停止
+                toneSynthRef.current.releaseAll(time)
+
+                // 音符の長さを90%に短縮（音が重ならないように）
+                const durationMap: {[key: string]: number} = {
+                  '8n': 0.15,   // 8分音符 = 0.15秒 @ 80BPM
+                  '4n': 0.3,    // 4分音符 = 0.3秒
+                  '4n.': 0.45,  // 付点4分音符 = 0.45秒
+                  '2n': 0.6     // 2分音符 = 0.6秒
+                }
+                const actualDuration = (durationMap[value.duration] || 0.3) * 0.85 // 85%に短縮
+
+                toneSynthRef.current.triggerAttackRelease(value.note, actualDuration, time)
+              }
+            }
+          }, notes).start(0)
+
+          tonePartRef.current.loop = true
+          tonePartRef.current.loopEnd = '4m' // 4小節でループ（短くして無音を減らす）
+
+          Tone.getTransport().bpm.value = 80 // 120から80に変更（ゆっくりしたテンポ）
+
+          // ドラムパターンを作成（キック、スネア、ハイハット）
+          const drumNotes = [
+            // キック
+            { time: '0:0', type: 'kick' },
+            { time: '0:2', type: 'kick' },
+            { time: '1:0', type: 'kick' },
+            { time: '1:2', type: 'kick' },
+            { time: '2:0', type: 'kick' },
+            { time: '2:2', type: 'kick' },
+            { time: '3:0', type: 'kick' },
+            { time: '3:2', type: 'kick' },
+            // スネア（2拍目、4拍目）
+            { time: '0:1', type: 'snare' },
+            { time: '0:3', type: 'snare' },
+            { time: '1:1', type: 'snare' },
+            { time: '1:3', type: 'snare' },
+            { time: '2:1', type: 'snare' },
+            { time: '2:3', type: 'snare' },
+            { time: '3:1', type: 'snare' },
+            { time: '3:3', type: 'snare' },
+            // ハイハット（8分音符）
+            { time: '0:0:0', type: 'hihat' },
+            { time: '0:0:2', type: 'hihat' },
+            { time: '0:1:0', type: 'hihat' },
+            { time: '0:1:2', type: 'hihat' },
+            { time: '0:2:0', type: 'hihat' },
+            { time: '0:2:2', type: 'hihat' },
+            { time: '0:3:0', type: 'hihat' },
+            { time: '0:3:2', type: 'hihat' },
+            { time: '1:0:0', type: 'hihat' },
+            { time: '1:0:2', type: 'hihat' },
+            { time: '1:1:0', type: 'hihat' },
+            { time: '1:1:2', type: 'hihat' },
+            { time: '1:2:0', type: 'hihat' },
+            { time: '1:2:2', type: 'hihat' },
+            { time: '1:3:0', type: 'hihat' },
+            { time: '1:3:2', type: 'hihat' }
+          ]
+
+          if (drumPartRef.current) {
+            drumPartRef.current.stop()
+            drumPartRef.current.dispose()
+          }
+
+          drumPartRef.current = new Tone.Part((time, value) => {
+            if (value.type === 'kick') {
+              kickRef.current?.triggerAttackRelease('C1', '8n', time)
+            } else if (value.type === 'snare') {
+              snareRef.current?.triggerAttackRelease('4n', time)
+            } else if (value.type === 'hihat') {
+              hihatRef.current?.triggerAttackRelease('32n', time)
+            }
+          }, drumNotes).start(0)
+
+          drumPartRef.current.loop = true
+          drumPartRef.current.loopEnd = '2m'
+
+          Tone.getTransport().start()
+          console.log('Transport started with JSON data and drums, BPM: 80')
+        } else {
+          console.error('No synth or no notes!', 'synth:', !!toneSynthRef.current, 'notes:', notes.length)
+        }
+      } catch (error) {
+        console.error('Failed to load music:', error)
       }
     }
 
@@ -450,9 +753,14 @@ function App() {
         tonePartRef.current.dispose()
         tonePartRef.current = null
       }
+      if (drumPartRef.current) {
+        drumPartRef.current.stop()
+        drumPartRef.current.dispose()
+        drumPartRef.current = null
+      }
       Tone.getTransport().stop()
     }
-  }, [gameState.tournamentRound, gameStarted, gameState.isGameOver, gameState.showVictory])
+  }, [gameState.tournamentRound, gameStarted, gameState.isGameOver, gameState.showVictory, bgmVolume])
 
   // Auto pitch
   useEffect(() => {
@@ -466,23 +774,26 @@ function App() {
       // Available pitch types expand with difficulty
       let pitchTypes: PitchType[] = ['straight', 'fast']
 
-      // Koshien tournament
+      // Koshien tournament - no pitches over 200km (no fast, no fastball)
       if (tournamentType === 'koshien') {
-        if (difficulty >= 2) {
+        // Round 1: 160km straight only
+        if (difficulty === 1) {
+          pitchTypes = ['straight']
+        } else if (difficulty >= 2) {
+          pitchTypes = ['straight']  // 速球(220km)を除外
           pitchTypes.push('curve-left', 'curve-right', 'changeup')
         }
         if (difficulty >= 3) {
           pitchTypes.push('slider', 'sinker', 'gyroball')
         }
-        if (difficulty >= 4) {
-          pitchTypes.push('fastball')
-        }
+        // 甲子園では200km以上(fast, fastball)は投げない
       }
-      // NPB tournament - adds knuckleball and cutter
+      // NPB tournament - no pitches over 300km (no fastball with high difficulty)
       else if (tournamentType === 'npb') {
-        pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter']
+        pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'knuckleball', 'cutter']
+        // NPBでは300km以上は投げない（fastballは除外）
       }
-      // MLB tournament - adds magical pitches
+      // MLB tournament - adds magical pitches, allows all speeds
       else if (tournamentType === 'mlb') {
         pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
       }
@@ -496,10 +807,10 @@ function App() {
       const speedMultiplier = tournamentType === 'koshien' ? 1.0 : tournamentType === 'npb' ? 1.2 : 1.4
 
       // Random control (targeting variation)
-      // 70% chance of strike zone, 30% chance of ball (outside strike zone)
-      const isIntentionalBall = Math.random() < 0.3
+      // 85% chance of strike zone, 15% chance of ball (outside strike zone)
+      const isIntentionalBall = Math.random() < 0.15
       const targetXOffset = isIntentionalBall
-        ? (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 20)  // Ball: ±40-60px from center at home plate
+        ? (Math.random() < 0.5 ? 1 : -1) * (30 + Math.random() * 15)  // Ball: ±30-45px from center at home plate
         : (Math.random() - 0.5) * 40  // Strike zone: ±20px from center at home plate
 
       // Calculate angle (vx) needed to reach target position
@@ -540,7 +851,7 @@ function App() {
           vy = 6 * speedMultiplier
           break
         case 'changeup':
-          vy = 8 * speedMultiplier
+          vy = 5 * speedMultiplier  // 初速を遅く（180km → 140km）
           vx = (targetXOffset / distanceY) * vy
           break
         case 'gyroball':
@@ -609,13 +920,13 @@ function App() {
 
       console.log('✅ Display info set:', displayType, displaySpeed, 'km/h')
 
-      playSound(300, 0.1)
+      playPitchSound()
     }, 2000 + Math.random() * 2000)
 
     return () => {
       if (pitchIntervalRef.current) clearTimeout(pitchIntervalRef.current)
     }
-  }, [pitch, gameState.isGameOver, gameState.showVictory, gameState.tournamentRound, playSound, gameStarted])
+  }, [pitch, gameState.isGameOver, gameState.showVictory, gameState.tournamentRound, playPitchSound, gameStarted])
 
   // Handle swing
   const handleSwing = useCallback(() => {
@@ -687,7 +998,7 @@ function App() {
 
       setPitch(null)
       // Keep pitch info displayed until next pitch
-      playSound(800, 0.15, 'square')
+      playBatSound()
       setBalls(0)
       setStrikes(0)
     } else {
@@ -706,7 +1017,7 @@ function App() {
         return newStrikes
       })
     }
-  }, [pitch, ball, playSound])
+  }, [pitch, ball, playSound, playBatSound])
 
   // Handle strike/out
   const handleStrike = () => {
@@ -1285,12 +1596,15 @@ function App() {
           newY = prev.y + prev.vy
           newX = prev.x + prev.vx
         } else if (prev.type === 'changeup') {
-          const decelerationFactor = newProgress
-          const minSpeed = prev.initialVy * 0.5
-          const currentVy = prev.initialVy - (prev.initialVy - minSpeed) * decelerationFactor
-          const finalVy = Math.max(currentVy, minSpeed)
+          // チェンジアップ: progress 0.25を超えたら一気に半分の速度に（止まる魔球と同じ位置）
+          const decelerationPoint = 0.25
+          let currentVy = prev.initialVy
 
-          newY = prev.y + finalVy
+          if (newProgress >= decelerationPoint) {
+            currentVy = prev.initialVy * 0.5  // 一気に半分の速度
+          }
+
+          newY = prev.y + currentVy
           newX = prev.x + prev.vx  // Changeup also travels in straight line
         } else if (prev.type === 'gyroball') {
           const accelerationFactor = Math.pow(newProgress, 2)
@@ -1538,9 +1852,65 @@ function App() {
     })
     setPitch(null)
     setBall(null)
+    setBalls(0)
+    setStrikes(0)
+    setGameStarted(false)
+  }, [])
+
+  const continueGame = useCallback(() => {
+    // 現在のトーナメントと回戦をそのままに、スコアとイニングをリセット
+    setGameState(prev => {
+      const newCpuScore = Math.floor(Math.random() * 3) + 3
+      return {
+        ...prev,
+        inning: 9,
+        outs: 0,
+        playerScore: 0,
+        cpuScore: newCpuScore,
+        bases: [false, false, false],
+        isGameOver: false,
+        cpuInningScores: generateInningScores(newCpuScore),
+        playerInningScores: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        cpuHits: Math.floor(Math.random() * 5) + 5,
+        cpuErrors: Math.floor(Math.random() * 3),
+        playerHits: Math.floor(Math.random() * 4) + 3,
+        playerErrors: Math.floor(Math.random() * 2)
+      }
+    })
+    setPitch(null)
+    setBall(null)
     setMessage('')
     setBalls(0)
     setStrikes(0)
+    setCurrentPitchInfo(null)
+  }, [])
+
+  const backToTop = useCallback(() => {
+    setGameState({
+      round: 1,
+      inning: 9,
+      outs: 0,
+      playerScore: 0,
+      cpuScore: 3,
+      bases: [false, false, false],
+      tournamentRound: 1,
+      tournamentType: 'koshien',
+      isGameOver: false,
+      isWinner: false,
+      cpuInningScores: generateInningScores(3),
+      playerInningScores: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      showVictory: false,
+      cpuHits: Math.floor(Math.random() * 5) + 5,
+      cpuErrors: Math.floor(Math.random() * 3),
+      playerHits: Math.floor(Math.random() * 4) + 3,
+      playerErrors: Math.floor(Math.random() * 2)
+    })
+    setPitch(null)
+    setBall(null)
+    setBalls(0)
+    setStrikes(0)
+    setGameStarted(false)
+    setMessage('')
     setCurrentPitchInfo(null)
   }, [])
 
@@ -1656,19 +2026,39 @@ function App() {
               >
                 🔇
               </span>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume * 100}
-                onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                className="w-32 sm:w-48 md:w-64 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                style={{
-                  background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
-                }}
-              />
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-400 w-10">BGM</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={bgmVolume * 100}
+                    onChange={(e) => setBgmVolume(Number(e.target.value) / 100)}
+                    className="w-24 sm:w-40 md:w-56 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${bgmVolume * 100}%, #374151 ${bgmVolume * 100}%, #374151 100%)`
+                    }}
+                  />
+                  <span className="text-xs sm:text-sm text-gray-300 w-8">{Math.round(bgmVolume * 100)}%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-400 w-10">SE</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={seVolume * 100}
+                    onChange={(e) => setSeVolume(Number(e.target.value) / 100)}
+                    className="w-24 sm:w-40 md:w-56 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${seVolume * 100}%, #374151 ${seVolume * 100}%, #374151 100%)`
+                    }}
+                  />
+                  <span className="text-xs sm:text-sm text-gray-300 w-8">{Math.round(seVolume * 100)}%</span>
+                </div>
+              </div>
               <span className="text-xs sm:text-sm text-gray-400">🔊</span>
-              <span className="text-xs sm:text-sm text-gray-300 w-8 sm:w-12">{Math.round(volume * 100)}%</span>
             </div>
 
             <button
@@ -1917,12 +2307,9 @@ function App() {
             height: `${canvasSize.height}px`,
             maxWidth: '100%',
           }}
-          className="border-4 border-gray-800 bg-green-700 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-lg cursor-pointer touch-none"
+          className="border-4 border-gray-800 bg-green-700 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-lg cursor-pointer"
           onClick={handleCanvasInteraction}
-          onTouchStart={(e) => {
-            e.preventDefault()
-            handleCanvasInteraction()
-          }}
+          onTouchStart={handleCanvasInteraction}
         />
 
         {message && (
@@ -1950,20 +2337,37 @@ function App() {
         {!isMobile && !gameState.isGameOver && (
           <div className="absolute bottom-4 right-4 bg-black bg-opacity-90 p-4 rounded-lg text-sm border border-gray-700">
             <h3 className="font-bold mb-2 text-gray-200">音量設定</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">🔇</span>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume * 100}
-                onChange={(e) => setVolume(Number(e.target.value) / 100)}
-                className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                style={{
-                  background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
-                }}
-              />
-              <span className="text-xs text-gray-400">🔊</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 w-10">BGM</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={bgmVolume * 100}
+                  onChange={(e) => setBgmVolume(Number(e.target.value) / 100)}
+                  className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${bgmVolume * 100}%, #374151 ${bgmVolume * 100}%, #374151 100%)`
+                  }}
+                />
+                <span className="text-xs text-gray-300 w-8">{Math.round(bgmVolume * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 w-10">SE</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={seVolume * 100}
+                  onChange={(e) => setSeVolume(Number(e.target.value) / 100)}
+                  className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${seVolume * 100}%, #374151 ${seVolume * 100}%, #374151 100%)`
+                  }}
+                />
+                <span className="text-xs text-gray-300 w-8">{Math.round(seVolume * 100)}%</span>
+              </div>
             </div>
           </div>
         )}
@@ -1995,31 +2399,86 @@ function App() {
                   ? '全トーナメントを制覇しました！世界一です！'
                   : `${getTournamentInfo(gameState.tournamentType, gameState.tournamentRound).roundName}敗退`}
               </p>
-              <button
-                onClick={restartGame}
-                className="bg-gray-800 text-white px-8 py-3 rounded-lg text-xl font-bold hover:bg-gray-700 border border-gray-600"
-              >
-                もう一度プレイ
-              </button>
+              <div className="flex flex-col gap-4">
+                {!gameState.isWinner && (
+                  <button
+                    onClick={continueGame}
+                    className="bg-blue-600 text-white px-8 py-3 rounded-lg text-xl font-bold hover:bg-blue-500 border border-blue-500"
+                  >
+                    コンティニュー
+                  </button>
+                )}
+                <button
+                  onClick={restartGame}
+                  className="bg-gray-800 text-white px-8 py-3 rounded-lg text-xl font-bold hover:bg-gray-700 border border-gray-600"
+                >
+                  初めからプレイ
+                </button>
+                <button
+                  onClick={backToTop}
+                  className="bg-gray-700 text-white px-8 py-3 rounded-lg text-xl font-bold hover:bg-gray-600 border border-gray-500"
+                >
+                  トップ画面に戻る
+                </button>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Mobile: Instructions below canvas */}
-      {isMobile && showInstructions && !gameState.isGameOver && (
-        <div className="mt-3 mx-2 bg-black bg-opacity-90 p-3 rounded-lg text-xs border border-gray-700 relative z-10 max-w-md">
-          <h3 className="font-bold mb-2 text-gray-200">操作方法</h3>
-          <p className="text-gray-300">画面タップ: スイング</p>
-          <p className="mt-2 text-xs text-gray-400">9回裏から開始。サヨナラ勝ちで次の試合へ。</p>
-          <p className="text-xs text-gray-400">同点または負けるとゲームオーバー。</p>
-          <p className="mt-2 text-xs text-gray-400">ゲームオーバー時: タップで再開</p>
-          <button
-            onClick={() => setShowInstructions(false)}
-            className="mt-2 bg-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-600 text-gray-200"
-          >
-            閉じる
-          </button>
+      {/* Mobile: Instructions and Volume controls below canvas */}
+      {isMobile && !gameState.isGameOver && (
+        <div className="mt-3 mx-2 flex gap-2 relative z-10">
+          {showInstructions && (
+            <div className="flex-1 bg-black bg-opacity-90 p-3 rounded-lg text-xs border border-gray-700">
+              <h3 className="font-bold mb-2 text-gray-200">操作方法</h3>
+              <p className="text-gray-300">画面タップ: スイング</p>
+              <p className="mt-2 text-xs text-gray-400">9回裏から開始。サヨナラ勝ちで次の試合へ。</p>
+              <p className="text-xs text-gray-400">同点または負けるとゲームオーバー。</p>
+              <p className="mt-2 text-xs text-gray-400">ゲームオーバー時: タップで再開</p>
+              <button
+                onClick={() => setShowInstructions(false)}
+                className="mt-2 bg-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-600 text-gray-200"
+              >
+                閉じる
+              </button>
+            </div>
+          )}
+          <div className={`${showInstructions ? 'flex-1' : 'w-full'} bg-black bg-opacity-90 p-3 rounded-lg text-xs border border-gray-700`}>
+            <h3 className="font-bold mb-2 text-gray-200">音量設定</h3>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 w-10">BGM</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={bgmVolume * 100}
+                  onChange={(e) => setBgmVolume(Number(e.target.value) / 100)}
+                  className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${bgmVolume * 100}%, #374151 ${bgmVolume * 100}%, #374151 100%)`
+                  }}
+                />
+                <span className="text-xs text-gray-300 w-8">{Math.round(bgmVolume * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 w-10">SE</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={seVolume * 100}
+                  onChange={(e) => setSeVolume(Number(e.target.value) / 100)}
+                  className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #4ade80 0%, #4ade80 ${seVolume * 100}%, #374151 ${seVolume * 100}%, #374151 100%)`
+                  }}
+                />
+                <span className="text-xs text-gray-300 w-8">{Math.round(seVolume * 100)}%</span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
