@@ -1,31 +1,8 @@
 {
-  "hash": "46833e4a",
+  "hash": "5c888ed0",
   "configHash": "eb7701e8",
-  "lockfileHash": "6020cfb9",
-  "browserHash": "2dd45ce8",
-  "optimized": {
-    "react/jsx-dev-runtime": {
-      "src": "../../node_modules/react/jsx-dev-runtime.js",
-      "file": "react_jsx-dev-runtime.js",
-      "fileHash": "03241726",
-      "needsInterop": true
-    },
-    "react-dom/client": {
-      "src": "../../node_modules/react-dom/client.js",
-      "file": "react-dom_client.js",
-      "fileHash": "742e3b40",
-      "needsInterop": true
-    },
-    "react": {
-      "src": "../../node_modules/react/index.js",
-      "file": "react.js",
-      "fileHash": "1f20d47b",
-      "needsInterop": true
-    }
-  },
-  "chunks": {
-    "chunk-TDVGPZLM": {
-      "file": "chunk-TDVGPZLM.js"
-    }
-  }
+  "lockfileHash": "54ba6da8",
+  "browserHash": "3860a726",
+  "optimized": {},
+  "chunks": {}
 }
