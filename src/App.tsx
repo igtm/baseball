@@ -999,8 +999,7 @@ function App() {
       setPitch(null)
       // Keep pitch info displayed until next pitch
       playBatSound()
-      setBalls(0)
-      setStrikes(0)
+      // BSOはボールの結果判定後にリセット（ファウルの場合はストライク追加のみ）
     } else {
       // Swing and miss - always count strike when swinging and missing
       console.log('❌ Swing and miss!')
