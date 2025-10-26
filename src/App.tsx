@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import * as Tone from 'tone'
 
-type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping'
+type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping' | 'sweeper'
 type HitResult = 'H' | '2B' | '3B' | 'HR' | 'OUT' | null
 type Base = boolean[]
 
@@ -137,21 +137,22 @@ function App() {
 
   // Get pitch type name in Japanese
   const getPitchName = (type: PitchType): string => {
-    const names: Record<PitchType, string> = {
-      'straight': 'ストレート',
-      'curve-left': 'カーブ（左）',
-      'curve-right': 'カーブ（右）',
-      'fast': '速球',
-      'fastball': '剛速球',
-      'slider': 'スライダー',
-      'sinker': 'シンカー',
-      'changeup': 'チェンジアップ',
-      'gyroball': 'ジャイロボール',
-      'knuckleball': 'ナックルボール',
-      'cutter': 'カットボール',
-      'vanishing': '消える魔球',
-      'stopping': '止まる魔球'
-    }
+  const names: Record<PitchType, string> = {
+    'straight': 'ストレート',
+    'curve-left': 'カーブ（左）',
+    'curve-right': 'カーブ（右）',
+    'fast': '速球',
+    'fastball': '剛速球',
+    'slider': 'スライダー',
+    'sinker': 'シンカー',
+    'changeup': 'チェンジアップ',
+    'gyroball': 'ジャイロボール',
+    'knuckleball': 'ナックルボール',
+    'cutter': 'カットボール',
+    'vanishing': '消える魔球',
+    'stopping': '止まる魔球',
+    'sweeper': 'スイーパー'
+  }
     return names[type]
   }
 
@@ -795,7 +796,7 @@ function App() {
       }
       // MLB tournament - adds magical pitches, allows all speeds
       else if (tournamentType === 'mlb') {
-        pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
+        pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping', 'sweeper']
       }
 
       const selectedType = pitchTypes[Math.floor(Math.random() * pitchTypes.length)]
@@ -845,6 +846,12 @@ function App() {
           const baseSliderVx = ((difficulty >= 4 || tournamentType !== 'koshien') ? 2.5 : 1.5) + (Math.random() - 0.5) * 0.6
           vx = (baseSliderVx + (targetXOffset / distanceY) * 5) * speedMultiplier
           vy = 5 * speedMultiplier
+          break
+        case 'sweeper':
+          // Sweeper - even stronger breaking ball than slider, curves very sharply
+          const baseSweeperVx = 3.5 + (Math.random() - 0.5) * 0.8
+          vx = (baseSweeperVx + (targetXOffset / distanceY) * 6) * speedMultiplier
+          vy = 5.5 * speedMultiplier
           break
         case 'sinker':
           vx = ((0.5 + (Math.random() - 0.5) * 0.4) + (targetXOffset / distanceY) * 6) * speedMultiplier
@@ -1624,6 +1631,14 @@ function App() {
           // Cutter - fast pitch with late sharp break (like slider but faster)
           const breakProgress = Math.pow(newProgress, 3)  // Late break
           const finalBreakDistance = 60
+          const parabolaX = breakProgress * finalBreakDistance * Math.sign(prev.vx)
+
+          newY = prev.startY + (targetY - prev.startY) * newProgress
+          newX = targetX + parabolaX
+        } else if (prev.type === 'sweeper') {
+          // Sweeper - very strong breaking ball, curves sharply like slider but more
+          const breakProgress = Math.pow(newProgress, 2)
+          const finalBreakDistance = 120 + Math.random() * 20  // Much stronger break than slider
           const parabolaX = breakProgress * finalBreakDistance * Math.sign(prev.vx)
 
           newY = prev.startY + (targetY - prev.startY) * newProgress
