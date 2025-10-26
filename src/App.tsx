@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import * as Tone from 'tone'
 
-type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping'
+type PitchType = 'straight' | 'curve-left' | 'curve-right' | 'slow-curve' | 'fast' | 'slider' | 'sinker' | 'changeup' | 'fastball' | 'gyroball' | 'knuckleball' | 'cutter' | 'vanishing' | 'stopping'
 type HitResult = 'H' | '2B' | '3B' | 'HR' | 'OUT' | null
 type Base = boolean[]
 
@@ -141,6 +141,7 @@ function App() {
       'straight': 'ストレート',
       'curve-left': 'カーブ（左）',
       'curve-right': 'カーブ（右）',
+      'slow-curve': 'スローカーブ',
       'fast': '速球',
       'fastball': '剛速球',
       'slider': 'スライダー',
@@ -779,24 +780,24 @@ function App() {
         // Round 1: 160km straight only
         if (difficulty === 1) {
           pitchTypes = ['straight']
-        } else if (difficulty >= 2) {
-          pitchTypes = ['straight']  // 速球(220km)を除外
-          pitchTypes.push('curve-left', 'curve-right', 'changeup')
-        }
+         } else if (difficulty >= 2) {
+           pitchTypes = ['straight']  // 速球(220km)を除外
+           pitchTypes.push('curve-left', 'curve-right', 'slow-curve', 'changeup')
+         }
         if (difficulty >= 3) {
           pitchTypes.push('slider', 'sinker', 'gyroball')
         }
         // 甲子園では200km以上(fast, fastball)は投げない
       }
-      // NPB tournament - no pitches over 300km (no fastball with high difficulty)
-      else if (tournamentType === 'npb') {
-        pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'knuckleball', 'cutter']
-        // NPBでは300km以上は投げない（fastballは除外）
-      }
-      // MLB tournament - adds magical pitches, allows all speeds
-      else if (tournamentType === 'mlb') {
-        pitchTypes = ['fast', 'curve-left', 'curve-right', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
-      }
+       // NPB tournament - no pitches over 300km (no fastball with high difficulty)
+       else if (tournamentType === 'npb') {
+         pitchTypes = ['straight', 'fast', 'curve-left', 'curve-right', 'slow-curve', 'changeup', 'slider', 'sinker', 'gyroball', 'knuckleball', 'cutter']
+         // NPBでは300km以上は投げない（fastballは除外）
+       }
+       // MLB tournament - adds magical pitches, allows all speeds
+       else if (tournamentType === 'mlb') {
+         pitchTypes = ['fast', 'curve-left', 'curve-right', 'slow-curve', 'changeup', 'slider', 'sinker', 'gyroball', 'fastball', 'knuckleball', 'cutter', 'vanishing', 'stopping']
+       }
 
       const selectedType = pitchTypes[Math.floor(Math.random() * pitchTypes.length)]
 
@@ -828,11 +829,15 @@ function App() {
           vx = ((-0.8 + (Math.random() - 0.5) * 0.4) + (targetXOffset / distanceY) * 3.5) * speedMultiplier
           vy = 3.5 * speedMultiplier
           break
-        case 'curve-right':
-          vx = ((0.8 + (Math.random() - 0.5) * 0.4) + (targetXOffset / distanceY) * 3.5) * speedMultiplier
-          vy = 3.5 * speedMultiplier
-          break
-        case 'fast':
+         case 'curve-right':
+           vx = ((0.8 + (Math.random() - 0.5) * 0.4) + (targetXOffset / distanceY) * 3.5) * speedMultiplier
+           vy = 3.5 * speedMultiplier
+           break
+         case 'slow-curve':
+           vx = ((Math.random() - 0.5) * 0.6 + (targetXOffset / distanceY) * 2.5) * speedMultiplier
+           vy = 2.5 * speedMultiplier
+           break
+         case 'fast':
           vy = 7 * speedMultiplier
           vx = (targetXOffset / distanceY) * vy
           break
